@@ -22,22 +22,30 @@ grayscale - (required) numpy array containing masked grayscale image of a virolo
 
 mask - (optional, default None) numpy array containing binary mask of a single virological plaque object.
 
-==============================
+___________
 
 ### Phenotypes
-**Plaque** object class is designed to hold a single virological plaque phenotype. This is a minimal type of object required for analysis.
+
+**Plaque**
+
+This object class is designed to hold a single virological plaque phenotype. This is a minimal type of object required for analysis.
 
 _Arguments_:
 
 mask - (required) numpy array containing binary mask of a single virological plaque object.
 
-**PlaqueFluorescence** class is designed to hold a plaque obtain from fluorescence image. Class inherits from Plaque class and is also designed to hold a single virological plaque phenotype.
+**PlaqueFluorescence**
+
+This class is designed to hold a plaque obtain from fluorescence image. Class inherits from Plaque class and is also designed to hold a single virological plaque phenotype.
 
 _Additonal arguments_:
+
 image - (required) numpy array containing grayscale image of a single virological plaque object.
 
 
-**PlaqueCrystalViolet** class is designed to hold a plaque obtained from crystal violet staining image. Class inherits from Plaque class and is also designed to hold a single virological plaque phenotype.
+**PlaqueCrystalViolet**
+
+This class is designed to hold a plaque obtained from crystal violet staining image. Class inherits from Plaque class and is also designed to hold a single virological plaque phenotype.
 
 _Additonal arguments_:
 
