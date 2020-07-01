@@ -21,9 +21,9 @@ class PlaqueImage:
         if mask:
             self.mask = mask
 
-class PlaqueImageRgb:
+class PlaqueImageCV:
     """
-    PlaqueImage class designed to hold versatile image data containing multiple
+    PlaqueImageCV class designed to hold versatile image data containing multiple
     plaque phenotypes.
 
     _Arguments_:

@@ -1,3 +1,5 @@
+import numpy as np
+
 class Plaque:
     """
     Plaque object class is designed to hold a single virological plaque
@@ -10,6 +12,10 @@ class Plaque:
 
     def __init__(self, mask):
         #super(, self).__init__()
+
+        #check data types
+        if not type(mask) is np.ndarray:
+            raise TypeError("Mask atribute of Plaque must be a numpy array")
         self.mask = mask
 
 
@@ -26,6 +32,9 @@ class PlaqueFluorescence(Plaque):
     virological plaque object.
     """
     def __init__(self, image):
+        #check data types
+        if not type(image) is np.ndarray:
+            raise TypeError("Image atribute of Plaque must be a numpy array")
         self.image = image
 
     def find_peak(self):
@@ -33,7 +42,7 @@ class PlaqueFluorescence(Plaque):
 
 class PlaqueCrystalViolet(Plaque):
     """
-    Plaque obtain from fluorescence image. Class inherits from Plaque class and
+    Plaque obtained from crystal violet image. Class inherits from Plaque class and
     is also designed to hold a single virological plaque phenotype.
 
     _Additonal arguments_:
@@ -41,4 +50,7 @@ class PlaqueCrystalViolet(Plaque):
     single virological plaque object.
     """
     def __init__(self, image):
+        #check data types
+        if not type(mask) is np.ndarray:
+            raise TypeError("Image atribute of Plaque must be a numpy array")
         self.image = image
