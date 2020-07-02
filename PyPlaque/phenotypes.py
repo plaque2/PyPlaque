@@ -11,11 +11,9 @@ class Plaque:
     """
 
     def __init__(self, mask):
-        #super(, self).__init__()
-
         #check data types
-        if not type(mask) is np.ndarray:
-            raise TypeError("Mask atribute of Plaque must be a numpy array")
+        if (not type(mask) is np.ndarray) or (not mask.ndim == 2):
+            raise TypeError("Mask atribute of Plaque must be a 2D numpy array")
         self.mask = mask
 
 
@@ -31,10 +29,11 @@ class PlaqueFluorescence(Plaque):
     image - (required) numpy array containing grayscale image of a single
     virological plaque object.
     """
-    def __init__(self, image):
+    def __init__(self, mask, image):
+        super(PlaqueFluorescence, self).__init__(mask)
         #check data types
-        if not type(image) is np.ndarray:
-            raise TypeError("Image atribute of Plaque must be a numpy array")
+        if (not type(image) is np.ndarray) or (not mask.ndim == 2):
+            raise TypeError("Image atribute of Plaque must be a 2D numpy array")
         self.image = image
 
     def find_peak(self):
@@ -49,8 +48,9 @@ class PlaqueCrystalViolet(Plaque):
     image - (required) numpy array containing RGB or a graysacle image of a
     single virological plaque object.
     """
-    def __init__(self, image):
+    def __init__(self, mask, image):
+        super(PlaqueCrystalViolet, self).__init__(mask)
         #check data types
-        if not type(mask) is np.ndarray:
-            raise TypeError("Image atribute of Plaque must be a numpy array")
+        if (not type(image) is np.ndarray) or (not 2 == mask.ndim <= 3):
+            raise TypeError("Image atribute of Crystal Violet Plaque must be a 2D or 3D numpy array")
         self.image = image
