@@ -32,7 +32,9 @@ class PlaqueFluorescence(Plaque):
     def __init__(self, mask, image):
         super(PlaqueFluorescence, self).__init__(mask)
         #check data types
-        if (not type(image) is np.ndarray) or (not mask.ndim == 2):
+        if (not type(mask) is np.ndarray) or (not mask.ndim == 2):
+            raise TypeError("Mask atribute of Plaque must be a 2D numpy array")
+        if (not type(image) is np.ndarray) or (not image.ndim == 2):
             raise TypeError("Image atribute of Plaque must be a 2D numpy array")
         self.image = image
 
