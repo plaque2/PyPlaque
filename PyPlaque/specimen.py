@@ -4,17 +4,17 @@ from phenotypes import Plaque
 
 class PlaquesMask:
     """
-    *PlaquesMask class* designed to hold binary mask of multiple
+    **PlaquesMask class** designed to hold binary mask of multiple
     plaque phenotypes.
 
-    __Arguments__:
+    _Arguments_:
 
     name - (str, required) string, image sample name for identification
 
     plaques_mask - (np.array, required) numpy array containing
     binary mask of all virological plaque objects.
     """
-    def __init__(self, name, plaques_mask):
+    def _init_(self, name, plaques_mask):
         # check types
         if not type(name) is str:
             raise TypeError("Image name atribute must be a str")
@@ -26,10 +26,10 @@ class PlaquesMask:
 
     def iterate_plaques(self, min_area = 100):
         """
-        *iterate_palques method* returns a list of individual plaques
+        **iterate_palques method** returns a list of individual plaques
         stored as binary numpy arrays.
 
-        __Arguments__:
+        _Arguments_:
 
         min_are - (int, optional, default = 100) a cut-off value for plaque area
         in px.
@@ -47,11 +47,11 @@ class PlaquesMask:
 
 class PlaquesImageGray(PlaquesMask):
     """
-    *PlaqueImageGray class* designed to hold grayscale image data containing
+    **PlaqueImageGray class** designed to hold grayscale image data containing
     multiple plaque phenotypes with a respective binary mask. The class inherits
     from PlaquesMask.
 
-    __Additonal arguments__:
+    _Additonal arguments_:
 
     name - (str, required) string, image sample name for identification
 
@@ -65,8 +65,8 @@ class PlaquesImageGray(PlaquesMask):
 
     """
 
-    def __init__(self, name, image, plaques_mask = None, threshold = None):
-        super(PlaquesImageGray, self).__init__()
+    def _init_(self, name, image, plaques_mask = None, threshold = None):
+        super(PlaquesImageGray, self)._init_()
         # check types
         if not type(name) is str:
             raise TypeError("Image name atribute must be a str")
@@ -83,11 +83,11 @@ class PlaquesImageGray(PlaquesMask):
 
 class PlaquesImageRGB(PlaquesMask):
     """
-    *PlaquesImageRGB class* designed to hold RGB image data containing
+    **PlaquesImageRGB class** designed to hold RGB image data containing
     multiple plaque phenotypes with a respective binary mask.The class inherits
     from PlaquesMask.
 
-    __Additonal arguments__:
+    _Additonal arguments_:
 
     name - (str, required) image sample name for identification
 
@@ -98,8 +98,8 @@ class PlaquesImageRGB(PlaquesMask):
     plaques_mask - (np.array, required) numpy array containing binary mask of all
     virological plaque objects.
     """
-    def __init__(self, name, image, plaques_mask):
-        super(PlaquesImageRGB, self).__init__()
+    def _init_(self, name, image, plaques_mask):
+        super(PlaquesImageRGB, self)._init_()
         # check types
         if not type(name) is str:
             raise TypeError("Image name atribute must be a str")
@@ -114,9 +114,9 @@ class PlaquesImageRGB(PlaquesMask):
 
 class PlaquesWell():
     """
-    *Class PlaquesWell* is aimed to contain a full well of a multititre plate.
+    **Class PlaquesWell** is aimed to contain a full well of a multititre plate.
 
-    __Arguments__:
+    _Arguments_:
 
     row - (int or str, required) row id of the well.
 
@@ -129,7 +129,7 @@ class PlaquesWell():
     the well.
     """
 
-    def __init__(self, row, column, well_image, well_mask):
+    def _init_(self, row, column, well_image, well_mask):
         #check data types
         if (not type(row) is int) or (not type(row) is str):
             raise TypeError("Expected n_rows argument to be int or str")
@@ -149,14 +149,14 @@ class PlaquesWell():
 
     """
 
-        return self * self.well_mask
+        return self ** self.well_mask
 
 class PlateImage():
     """
-    *PlateImage Class* is aimed to contain a full multititre plate image and
+    **PlateImage Class** is aimed to contain a full multititre plate image and
     it's respective binary mask.
 
-    __Arguments__:
+    _Arguments_:
 
     n_rows - (int, required) number of rows in the plate (usually lower than
     the number of rows).
@@ -171,7 +171,7 @@ class PlateImage():
     plate.
     """
 
-    def __init__(self, n_rows, n_columns, plate_image, plate_mask):
+    def _init_(self, n_rows, n_columns, plate_image, plate_mask):
 
         #check data types
         if not type(n_rows) is int:
@@ -189,13 +189,13 @@ class PlateImage():
 
     def iterate_wells(self, min_area = 100):
         """
-        *Iterate_wells method* returns a list of individual wells of the plate
+        **Iterate_wells method** returns a list of individual wells of the plate
         stored as binary numpy arrays.
         """
         well_crops = []
         for idx,well in enumerate(regionprops(label(clear_border(img)))):
             if well.area >= min_area:
                     minr, minc, maxr, maxc = well.bbox
-                    masked_img = self.image * well
+                    masked_img = self.image ** well
                     well_crops.append(masked_img[minr:maxr, minc:maxc])
         return well_crops
