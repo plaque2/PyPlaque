@@ -11,7 +11,7 @@ Python package for virus plaque analysis based on Plaque2.0
 
 ### Sepcimen
 
-#### PlaquesMask class
+___________
 
 **PlaquesMask class** designed to hold binary mask of multiple
 plaque phenotypes.
@@ -23,7 +23,7 @@ name - (str, required) string, image sample name for identification
 plaques_mask - (np.array, required) numpy array containing
 binary mask of all virological plaque objects.
 
-**iterate_palques method** returns a list of individual plaques
+**get_palques method** returns a list of individual plaques
 stored as binary numpy arrays.
 
 _Arguments_:
@@ -31,7 +31,7 @@ _Arguments_:
 min_are - (int, optional, default = 100) a cut-off value for plaque area
 in px.
 
-#### PlaqueImageGray class
+___________
 
 **PlaqueImageGray class** designed to hold grayscale image data containing
 multiple plaque phenotypes with a respective binary mask. The class inherits
@@ -48,7 +48,14 @@ measuring properties of fluorescent plaque image.
 plaques_mask - (np.array, optional, default None) numpy array containing
 binary mask of all virological plaque objects.
 
-#### PlaquesImageRGB class
+threshold - (float between 0 and 1, optional, default None) fixed threshold
+value for creating the binary mask.
+
+sigma - (int, optional, default = 5) guassian blur sigma in pixels used by
+the fixed thresholding approach.
+
+Either mask or fixed threshold must be provided
+___________
 
 **PlaquesImageRGB class** designed to hold RGB image data containing
 multiple plaque phenotypes with a respective binary mask.The class inherits
@@ -65,7 +72,7 @@ Used, e.g. in case of measuring properties of crystal violet plaque image.
 plaques_mask - (np.array, required) numpy array containing binary mask of all
 virological plaque objects.
 
-#### Class PlaquesWell
+___________
 
 **Class PlaquesWell** is aimed to contain a full well of a multititre plate.
 
@@ -82,7 +89,7 @@ well_mask  - (np.array, required) numpy array containing binary mask of
 the well.
 
 
-#### PlateImage Class
+___________
 
 **PlateImage Class** is aimed to contain a full multititre plate image and
 it's respective binary mask.
@@ -101,13 +108,13 @@ plate.
 plate_mask - (np.array, required) a binary mask outlining individual wells of the
 plate.
 
-**Iterate_wells method** returns a list of individual wells of the plate
+**get_wells method** returns a list of individual wells of the plate
 stored as binary numpy arrays.
 ___________
 
 ### Phenotypes
 
-#### Plaque
+___________
 
 **Plaque** class is designed to hold a single virological plaque
 phenotype as an object.
@@ -123,7 +130,7 @@ plaque object
 bbox - (float tuple, optional) contains minr, minc, maxr, maxc of the
 plaque object
 
-#### FluorescencePlaque
+___________
 
 **FluorescencePlaque** conains plaque obtained from fluorescence image.
 Class inherits from Plaque class and is also designed to hold a single
@@ -134,7 +141,7 @@ _Additonal arguments_:
 image - (required) numpy array containing grayscale image of a single
 virological plaque object.
 
-#### CrystalVioletPlaque
+___________
 
 **CrystalVioletPlaque** plaque obtained from crystal violet image. Class
 inherits from Plaque class and is also designed to hold a single virological

@@ -1,6 +1,8 @@
 from skimage.segmentation import clear_border
-from skimage.measure import label, regionprops
+from skimage.measure import label, regionprops, moments
+from skimage.filters import gaussian
 from phenotypes import Plaque
+from plq_utils import check_numbers
 
 class PlaquesMask:
     """
@@ -24,9 +26,9 @@ class PlaquesMask:
         self.name = name
         self.plaques_mask = plaques_mask
 
-    def iterate_plaques(self, min_area = 100):
+    def get_plaques(self, min_area = 100):
         """
-        **iterate_palques method** returns a list of individual plaques
+        **get_palques method** returns a list of individual plaques
         stored as binary numpy arrays.
 
         _Arguments_:
@@ -40,7 +42,9 @@ class PlaquesMask:
                                     clear_border(self.plaques_mask)))):
             if plaque.area >= min_area:
                     minr, minc, maxr, maxc = plaque.bbox
-                    plq = Plaque(plaque[minr:maxr, minc:maxc],
+                    M = moments(plaque)
+                    centroid = (M[1, 0] / M[0, 0], M[0, 1] / M[0, 0])
+                    plq = Plaque(plaque[minr:maxr, minc:maxc], centroid
                                         (minr, minc, maxr, maxc))
                     plaques_crops.append(plq)
         return plaques_list
@@ -62,10 +66,21 @@ class PlaquesImageGray(PlaquesMask):
     plaques_mask - (np.array, optional, default None) numpy array containing
     binary mask of all virological plaque objects.
 
+    threshold - (float between 0 and 1, optional, default None) fixed threshold
+    value for creating the binary mask.
 
+    sigma - (int, optional, default = 5) guassian blur sigma in pixels used by
+    the fixed thresholding approach.
+
+    Either mask or fixed threshold must be provided
     """
+    def fixed_threshold(img, thr, s):
+        img = gaussian(img, sigma = s)
+        img[img > thr] = 1
+        img[img <= thr] = 0
+        return img
 
-    def _init_(self, name, image, plaques_mask = None, threshold = None):
+    def _init_(self, name, image, plaques_mask = None, threshold = None, sigma = 5):
         super(PlaquesImageGray, self)._init_()
         # check types
         if not type(name) is str:
@@ -79,7 +94,12 @@ class PlaquesImageGray(PlaquesMask):
             if (not type(plaques_mask) is np.ndarray) or (not plaques_mask.ndim == 2):
                 raise TypeError("Mask atribute must be a 2D numpy array")
             self.plaques_mask = plaques_mask
-        else
+        elif threshold and sigma:
+            self.plaques_mask = fixed_threshold(img, threshold, sigma)
+        else:
+            raise ValueError("Either mask or fixed threshold must be provided")
+
+
 
 class PlaquesImageRGB(PlaquesMask):
     """
@@ -146,7 +166,7 @@ class PlaquesWell():
 
     def get_image(self):
     """
-
+    **get_image method** returns masked image of the well.
     """
 
         return self ** self.well_mask
@@ -187,15 +207,16 @@ class PlateImage():
         self.plate_image = plate_image
         self.plate_mask = plate_mask
 
-    def iterate_wells(self, min_area = 100):
+    def get_wells(self, min_area = 100):
         """
-        **Iterate_wells method** returns a list of individual wells of the plate
+        **get_wells method** returns a list of individual wells of the plate
         stored as binary numpy arrays.
         """
+
         well_crops = []
         for idx,well in enumerate(regionprops(label(clear_border(img)))):
             if well.area >= min_area:
-                    minr, minc, maxr, maxc = well.bbox
-                    masked_img = self.image ** well
-                    well_crops.append(masked_img[minr:maxr, minc:maxc])
+                minr, minc, maxr, maxc = well.bbox
+                masked_img = self.image ** well
+                well_crops.append(masked_img[minr:maxr, minc:maxc])
         return well_crops
