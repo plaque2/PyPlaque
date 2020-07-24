@@ -18,6 +18,7 @@ img = imread(img_url)
 imshow(img)
 
 ```
+![image](https://user-images.githubusercontent.com/1135672/88387118-b8b10f00-cda9-11ea-8d5e-98edff82a80f.png)
 
 Now let's detect plaques in this flourescence microscopy image and print out all their coordinmates:
 
@@ -42,6 +43,15 @@ This will output following measurements:
 ...
 
 ```
+
+Each Plaque object containes a crop of individual virological plaque, as well as, measurements:
+
+```
+imshow(plq.mask)
+print(plq.area)
+```
+
+![image](https://user-images.githubusercontent.com/1135672/88387173-db432800-cda9-11ea-9064-79e075c143ec.png)
 
 ___________
 
