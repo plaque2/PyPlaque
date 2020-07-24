@@ -1,6 +1,14 @@
 # PyPlaque
 Python package for virus plaque analysis based on Plaque2.0
 
+# Installation
+
+See project's PyPi page [https://pypi.org/project/PyPlaque/](https://pypi.org/project/PyPlaque/)
+
+```
+pip install PyPlaque
+```
+
 # Usage
 ```
 from specimen import PlaquesImageGray
