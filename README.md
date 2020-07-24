@@ -1,6 +1,49 @@
 # PyPlaque
 Python package for virus plaque analysis based on Plaque2.0
 
+# Usage
+```
+from specimen import PlaquesImageGray
+from phenotypes import Plaque
+
+```
+
+Here's a test example of how to analyze plaques in an image using PyPlaque. First let's load an example image:
+
+```
+from skimage.io import imsave, imread, imshow
+
+img_url = 'https://raw.github.com/plaque2/matlab/master/Sample_B01_s1_w2.tif'
+img = imread(img_url)
+imshow(img)
+
+```
+
+Now let's detect plaques in this flourescence microscopy image and print out all their coordinmates:
+
+```
+plq_img = PlaquesImageGray('Sample_B01_s1_w2',img, threshold=0.25)
+for plq in plq_img.get_plaques():
+    print(plq.centroid)
+```
+
+This will output following measurements:
+
+```
+(435.85833333333335, 1785.8416666666667)
+(653.1464788732394, 1209.9647887323943)
+(708.058912386707, 1251.6835347432025)
+(728.976492712741, 1599.9073812881993)
+(712.3316195372751, 1312.491002570694)
+(747.0576576576576, 1174.0234234234233)
+(752.5772277227722, 1119.0891089108911)
+(782.8965517241379, 1151.510344827586)
+
+...
+
+```
+
+___________
 
 ## Classes structure concept
 
