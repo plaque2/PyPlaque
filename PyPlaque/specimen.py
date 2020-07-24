@@ -1,8 +1,8 @@
+import numpy as np
 from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops, moments
-from skimage.filters import gaussian
 from phenotypes import Plaque
-from plq_utils import check_numbers
+from plq_utils import check_numbers, fixed_threshold
 
 class PlaquesMask:
     """
@@ -16,11 +16,11 @@ class PlaquesMask:
     plaques_mask - (np.array, required) numpy array containing
     binary mask of all virological plaque objects.
     """
-    def _init_(self, name, plaques_mask):
+    def __init__(self, name, plaques_mask):
         # check types
         if not type(name) is str:
             raise TypeError("Image name atribute must be a str")
-        if (not type(plaques_mask) is np.ndarray) or (not image.ndim == 2):
+        if (not type(plaques_mask) is np.ndarray) or (not plaques_mask.ndim == 2):
             raise TypeError("plaques_mask atribute must be a 2D numpy array")
 
         self.name = name
@@ -33,20 +33,21 @@ class PlaquesMask:
 
         _Arguments_:
 
-        min_are - (int, optional, default = 100) a cut-off value for plaque area
+        min_area - (int, optional, default = 100) a cut-off value for plaque area
         in px.
         """
+        if not type(min_area) is int:
+            raise TypeError("minimum are paprameter must be int")
+        
         plaques_list = []
         for idx,plaque in enumerate(regionprops(
                                     label(
                                     clear_border(self.plaques_mask)))):
             if plaque.area >= min_area:
                     minr, minc, maxr, maxc = plaque.bbox
-                    M = moments(plaque)
-                    centroid = (M[1, 0] / M[0, 0], M[0, 1] / M[0, 0])
-                    plq = Plaque(plaque[minr:maxr, minc:maxc], centroid
+                    plq = Plaque(self.plaques_mask[minr:maxr, minc:maxc], plaque.centroid,
                                         (minr, minc, maxr, maxc))
-                    plaques_crops.append(plq)
+                    plaques_list.append(plq)
         return plaques_list
 
 class PlaquesImageGray(PlaquesMask):
@@ -74,30 +75,25 @@ class PlaquesImageGray(PlaquesMask):
 
     Either mask or fixed threshold must be provided
     """
-    def fixed_threshold(img, thr, s):
-        img = gaussian(img, sigma = s)
-        img[img > thr] = 1
-        img[img <= thr] = 0
-        return img
 
-    def _init_(self, name, image, plaques_mask = None, threshold = None, sigma = 5):
-        super(PlaquesImageGray, self)._init_()
-        # check types
+    def __init__(self, name, image, plaques_mask = None, threshold = None, sigma = 5):
+         # check types
         if not type(name) is str:
             raise TypeError("Image name atribute must be a str")
         if (not type(image) is np.ndarray) or (not image.ndim == 2):
             raise TypeError("Image atribute must be a 2D numpy array")
-
-        self.name = name
-        self.image = image
+        
         if plaques_mask:
             if (not type(plaques_mask) is np.ndarray) or (not plaques_mask.ndim == 2):
                 raise TypeError("Mask atribute must be a 2D numpy array")
-            self.plaques_mask = plaques_mask
         elif threshold and sigma:
-            self.plaques_mask = fixed_threshold(img, threshold, sigma)
+            plaques_mask = fixed_threshold(image, threshold, sigma)
         else:
             raise ValueError("Either mask or fixed threshold must be provided")
+        
+        super(PlaquesImageGray, self).__init__(name, plaques_mask)
+        self.image = image
+
 
 
 
@@ -118,8 +114,7 @@ class PlaquesImageRGB(PlaquesMask):
     plaques_mask - (np.array, required) numpy array containing binary mask of all
     virological plaque objects.
     """
-    def _init_(self, name, image, plaques_mask):
-        super(PlaquesImageRGB, self)._init_()
+    def __init__(self, name, image, plaques_mask):
         # check types
         if not type(name) is str:
             raise TypeError("Image name atribute must be a str")
@@ -127,12 +122,11 @@ class PlaquesImageRGB(PlaquesMask):
             raise TypeError("Image atribute must be a 3D (RGB) numpy array")
         if (not type(plaques_mask) is np.ndarray) or (not plaques_mask.ndim == 2):
             raise TypeError("Mask atribute must be a 2D numpy array")
-
-        self.name = name
+        
+        super(PlaquesImageRGB, self).__init__(name, plaques_mask)
         self.image = image
-        self.plaques_mask = plaques_mask
 
-class PlaquesWell():
+class PlaquesWell:
     """
     **Class PlaquesWell** is aimed to contain a full well of a multititre plate.
 
@@ -149,7 +143,7 @@ class PlaquesWell():
     the well.
     """
 
-    def _init_(self, row, column, well_image, well_mask):
+    def __init__(self, row, column, well_image, well_mask):
         #check data types
         if (not type(row) is int) or (not type(row) is str):
             raise TypeError("Expected n_rows argument to be int or str")
@@ -165,13 +159,13 @@ class PlaquesWell():
         self.well_mask = well_mask
 
     def get_image(self):
-    """
-    **get_image method** returns masked image of the well.
-    """
+        """
+        **get_image method** returns masked image of the well.
+        """
 
-        return self ** self.well_mask
+        return self.well_image ** self.well_mask
 
-class PlateImage():
+class PlateImage:
     """
     **PlateImage Class** is aimed to contain a full multititre plate image and
     it's respective binary mask.
@@ -190,9 +184,7 @@ class PlateImage():
     plate_mask - (np.array, required) a binary mask outlining individual wells of the
     plate.
     """
-
-    def _init_(self, n_rows, n_columns, plate_image, plate_mask):
-
+    def __init__(self, n_rows, n_columns, plate_image, plate_mask):
         #check data types
         if not type(n_rows) is int:
             raise TypeError("Expected n_rows argument to be int")
@@ -212,9 +204,9 @@ class PlateImage():
         **get_wells method** returns a list of individual wells of the plate
         stored as binary numpy arrays.
         """
-
+    # ToDo: automated calculation of well row and col from x,y position
         well_crops = []
-        for idx,well in enumerate(regionprops(label(clear_border(img)))):
+        for idx,well in enumerate(regionprops(label(clear_border(self.image)))):
             if well.area >= min_area:
                 minr, minc, maxr, maxc = well.bbox
                 masked_img = self.image ** well
