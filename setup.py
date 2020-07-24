@@ -2,13 +2,13 @@ from distutils.core import setup
 setup(
   name = 'PyPlaque',
   packages = ['PyPlaque'],
-  version = '0.0.1',
+  version = 'v0.0.1',
   license='GPLv3',
   description = 'Python package for virus plaque analysis based on Plaque2.0',
   author = 'Plaque2.0 Team, AILS Institute',
   author_email = 'ayakimovich@ails.institute',
   url = 'https://github.com/plaque2/PyPlaque',
-  download_url = 'https://github.com/plaque2/PyPlaque/archive/PyPlaque_v_001.tar.gz',
+  download_url = 'https://github.com/plaque2/PyPlaque/archive/v0.0.1.tar.gz',
   keywords = ['Virus', 'Plaque', 'Virology', 'Microscopy', 'Computer vision'],
   install_requires=[
           'scikit-image',
@@ -16,8 +16,8 @@ setup(
       ],
   classifiers=[
     'Development Status :: 3 - Alpha',
-    'Intended Audience :: Biologist, bioinformaticians',
-    'Topic :: Software Development :: Build Tools',
+    'Intended Audience :: Science/Research',
+    'Topic :: Scientific/Engineering :: Bio-Informatics ',
     'License :: OSI Approved :: GPLv3 License',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.4',
