@@ -1,8 +1,15 @@
 from distutils.core import setup
+
+# read the contents of your README file
+from os import path
+folder_path = path.abspath(path.dirname(__file__))
+with open(path.join(folder_path, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(
   name = 'PyPlaque',
   packages = ['PyPlaque'],
-  version = 'v0.0.1',
+  version = 'v0.0.2',
   license='GPLv3',
   description = 'Python package for virus plaque analysis based on Plaque2.0',
   author = 'Plaque2.0 Team, AILS Institute',
@@ -25,4 +32,6 @@ setup(
     'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
   ],
+  long_description=long_description,
+    long_description_content_type='text/markdown'
 )
