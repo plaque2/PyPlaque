@@ -6,7 +6,7 @@ folder_path = path.abspath(path.dirname(__file__))
 with open(path.join(folder_path, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-version = 'v0.0.2'
+version = 'v0.0.3'
 
 setup(
   name = 'PyPlaque',
