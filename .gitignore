@@ -2,6 +2,7 @@
 *.ipynb
 *.pyc
 *dist*
+*PyPlaque.egg-info*
 *MANIFEST*
 *__pycache__/*
 *ipynb_checkpoints*

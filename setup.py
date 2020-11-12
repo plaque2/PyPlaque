@@ -1,10 +1,13 @@
-from distutils.core import setup
+from setuptools import setup
 
 # read the contents of your README file
-from os import path
-folder_path = path.abspath(path.dirname(__file__))
-with open(path.join(folder_path, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+
+import pathlib
+
+cwd = pathlib.Path(__file__).parent.resolve()
+
+# Get the long description from the README file
+long_description = (cwd / 'README.md').read_text(encoding='utf-8')
 
 version = 'v0.0.3'
 
@@ -36,5 +39,5 @@ setup(
     'Programming Language :: Python :: 3.8',
   ],
   long_description=long_description,
-    long_description_content_type='text/markdown'
+  long_description_content_type='text/markdown'
 )

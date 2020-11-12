@@ -10,10 +10,10 @@ pip install PyPlaque
 ```
 
 # Usage
+
 ```
 from specimen import PlaquesImageGray
 from phenotypes import Plaque
-
 ```
 
 Here's a test example of how to analyze plaques in an image using PyPlaque. First let's load an example image:
@@ -24,8 +24,8 @@ from skimage.io import imsave, imread, imshow
 img_url = 'https://raw.github.com/plaque2/matlab/master/Sample_B01_s1_w2.tif'
 img = imread(img_url)
 imshow(img)
-
 ```
+
 ![image](https://user-images.githubusercontent.com/1135672/88387118-b8b10f00-cda9-11ea-8d5e-98edff82a80f.png)
 
 Now let's detect plaques in this flourescence microscopy image and print out all their coordinmates:
@@ -49,7 +49,6 @@ This will output following measurements:
 (782.8965517241379, 1151.510344827586)
 
 ...
-
 ```
 
 Each Plaque object containes a crop of individual virological plaque, as well as, measurements:
