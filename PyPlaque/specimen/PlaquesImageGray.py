@@ -31,7 +31,7 @@ class PlaquesImageGray(PlaquesMask):
     Either mask or fixed threshold must be provided
     """
 
-    def __init__(self, name, image, plaques_mask = None, threshold = None, sigma = 5):
+    def __init__(self, name, image, plaques_mask = None, threshold = None, plqConnect = None, sigma = 5):
          # check types
         if not type(name) is str:
             raise TypeError("Image name atribute must be a str")
@@ -42,9 +42,16 @@ class PlaquesImageGray(PlaquesMask):
             if (not type(plaques_mask) is np.ndarray) or (not plaques_mask.ndim == 2):
                 raise TypeError("Mask atribute must be a 2D numpy array")
         elif threshold and sigma:
-            plaques_mask = fixed_threshold(image, threshold, sigma)
+#             plaques_mask = fixed_threshold(image, threshold, sigma)
+            plaques_mask = self.getPlaqueRegions(image,threshold,plqConnect)
         else:
             raise ValueError("Either mask or fixed threshold must be provided")
         
         super(PlaquesImageGray, self).__init__(name, plaques_mask)
         self.image = image
+    
+    def getPlaqueRegions(self,image,threshold,plqConnect)
+        BW =  img > thresh
+        distance = ndi.distance_transform_edt(~BW) 
+        BW2 = distance <= plqConnect    
+        return BW2
