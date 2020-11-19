@@ -1,4 +1,5 @@
 import numpy as np
+from scipy import ndimage as ndi
 from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops, moments
 from phenotypes import Plaque
