@@ -1,6 +1,6 @@
 import numpy as np
 from skimage.measure import label, regionprops, moments
-from plq_utils import check_numbers
+from PyPlaque.utils import check_numbers
 
 class Plaque:
     """

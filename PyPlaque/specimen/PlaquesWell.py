@@ -1,8 +1,8 @@
 import numpy as np
 from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops, moments
-from phenotypes import Plaque
-from plq_utils import check_numbers, fixed_threshold
+from PyPlaque.phenotypes import Plaque
+from PyPlaque.utils import check_numbers, fixed_threshold
 
 
 class PlaquesWell:
