@@ -12,8 +12,8 @@ pip install PyPlaque
 # Usage
 
 ```
-from specimen import PlaquesImageGray
-from phenotypes import Plaque
+from PyPlaque.specimen import PlaquesImageGray
+from PyPlaque.phenotypes import Plaque
 ```
 
 Here's a test example of how to analyze plaques in an image using PyPlaque. First let's load an example image:
