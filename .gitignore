@@ -1,5 +1,5 @@
 *.vscode*
-*.ipynb
+# *.ipynb
 *.pyc
 *dist*
 *PyPlaque.egg-info*
@@ -7,3 +7,5 @@
 *__pycache__*
 *__pycache__/*
 *ipynb_checkpoints*
+data/*
+.DS_Store
