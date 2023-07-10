@@ -35,6 +35,7 @@ setup(
           'scikit-image',
           'numpy',
           'opencv-python',
+          'matplotlib',
       ],
   
    classifiers=[

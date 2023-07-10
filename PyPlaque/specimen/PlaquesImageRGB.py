@@ -1,9 +1,5 @@
 import numpy as np
-from skimage.segmentation import clear_border
-from skimage.measure import label, regionprops, moments
 from PyPlaque.specimen import PlaquesMask
-from PyPlaque.phenotypes import Plaque
-from PyPlaque.utils import check_numbers, fixed_threshold
 
 
 class PlaquesImageRGB(PlaquesMask):

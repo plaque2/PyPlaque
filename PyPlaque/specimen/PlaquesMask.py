@@ -1,9 +1,8 @@
-from turtle import fillcolor
 import numpy as np
 from skimage.segmentation import clear_border
-from skimage.measure import label, regionprops, moments
+from skimage.measure import label, regionprops
 from PyPlaque.phenotypes import Plaque
-from PyPlaque.utils import check_numbers, fixed_threshold, centroid
+from PyPlaque.utils import centroid
 from matplotlib.patches import Circle
 import matplotlib.pyplot as plt
 
