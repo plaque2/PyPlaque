@@ -1,4 +1,5 @@
 import numpy as np
+
 def stitch_wells(wells: list, nrows: int, ncols: int) -> np.array :
     combined_img = combine_img_blocks(wells, nrows, ncols)
     return combined_img

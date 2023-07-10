@@ -1,12 +1,7 @@
 import numpy as np
-
-import numpy as np
-import cv2
-from skimage import measure,  morphology, util, restoration
+from skimage import measure
 from scipy import ndimage as ndi
-import matplotlib.pyplot as plt
 import skimage
-from skimage.segmentation import clear_border
 
 
 def getAllPlaqueRegions(image,threshold,plqConnect):
