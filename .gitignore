@@ -6,4 +6,11 @@
 *MANIFEST*
 *__pycache__*
 *__pycache__/*
+<<<<<<< Updated upstream
 *ipynb_checkpoints*
+=======
+*ipynb_checkpoints*
+data/*
+*.pytest_cache*
+.DS_Store
+>>>>>>> Stashed changes
