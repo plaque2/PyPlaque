@@ -1,11 +1,5 @@
-import os
-import numpy as np
-from skimage.segmentation import clear_border
-from skimage.measure import label, regionprops, moments
-from PyPlaque.phenotypes import Plaque
-from PyPlaque.utils import check_numbers, fixed_threshold
-
 import io
+import os
 import pathlib
 import warnings
 
