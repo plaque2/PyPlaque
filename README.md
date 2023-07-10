@@ -9,6 +9,11 @@ See project's PyPi page [https://pypi.org/project/PyPlaque/](https://pypi.org/pr
 pip install PyPlaque
 ```
 
+# Local devloper installation
+
+- Clone repo
+- run `pip install -e .`
+
 # Usage
 
 ```

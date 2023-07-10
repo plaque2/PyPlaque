@@ -5,7 +5,8 @@
 *PyPlaque.egg-info*
 *MANIFEST*
 *__pycache__*
+*__pycache__/*
+*data/*
+*.DS_Store*
 *ipynb_checkpoints*
-data/*
 *.pytest_cache*
-.DS_Store
