@@ -24,11 +24,11 @@ class PlaquesWell:
 
     def __init__(self, row, column, well_image, well_mask):
         #check data types
-        if (not type(row) is int) or (not type(row) is str):
-            raise TypeError("Expected n_rows argument to be int or str")
-        if (not type(column) is int) or (not type(column) is str):
-            raise TypeError("Expected n_columns argument to be int or str")
-        if (not type(well_image) is np.ndarray) or (not 2 >= well_image.ndim <= 3):
+        if (not (type(row) is int or type(row) is str)):
+            raise TypeError("Expected row argument to be int or str")
+        if (not (type(column) is int or type(column) is str)):
+            raise TypeError("Expected column argument to be int or str")
+        if (not type(well_image) is np.ndarray) or ( not (well_image.ndim >=2 and well_image.ndim <= 3)):
             raise TypeError("Image atribute of the plate must be a 2D or 3D numpy array")
         if (not type(well_mask) is np.ndarray) or (not well_mask.ndim == 2):
             raise TypeError("Mask atribute of the plate must be a 2D numpy array")

@@ -1,16 +1,11 @@
 *.vscode*
-*.ipynb
+# *.ipynb
 *.pyc
 *dist*
 *PyPlaque.egg-info*
 *MANIFEST*
 *__pycache__*
-*__pycache__/*
-<<<<<<< Updated upstream
-*ipynb_checkpoints*
-=======
 *ipynb_checkpoints*
 data/*
 *.pytest_cache*
 .DS_Store
->>>>>>> Stashed changes
