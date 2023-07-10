@@ -33,6 +33,7 @@ setup(
   install_requires=[
           'scikit-image',
           'numpy',
+          'opencv-python',
       ],
 
 #   classifiers=[
