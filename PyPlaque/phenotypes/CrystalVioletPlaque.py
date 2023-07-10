@@ -31,6 +31,6 @@ class CrystalVioletPlaque(Plaque):
         super(CrystalVioletPlaque, self).__init__(mask, centroid, bbox)
         
         #check data types
-        if (not type(image) is np.ndarray) or (not 2 == mask.ndim <= 3):
+        if (not type(image) is np.ndarray) or ( not (mask.ndim >=2 and mask.ndim <= 3)):
             raise TypeError("Image atribute of Crystal Violet Plaque must be a 2D or 3D numpy array")
         self.image = image

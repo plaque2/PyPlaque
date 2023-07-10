@@ -32,6 +32,3 @@ class FluorescencePlaque(Plaque):
         if (not type(image) is np.ndarray) or (not image.ndim == 2):
             raise TypeError("Image atribute of Plaque must be a 2D numpy array")
         self.image = image
-
-    def find_peak(self):
-        pass

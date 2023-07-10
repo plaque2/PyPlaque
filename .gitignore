@@ -1,9 +1,12 @@
 *.vscode*
-*.ipynb
+# *.ipynb
 *.pyc
 *dist*
 *PyPlaque.egg-info*
 *MANIFEST*
 *__pycache__*
 *__pycache__/*
+*data/*
+*.DS_Store*
 *ipynb_checkpoints*
+*.pytest_cache*
