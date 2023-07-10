@@ -36,7 +36,7 @@ setup(
           'numpy',
           'opencv-python',
       ],
-
+  
    classifiers=[
      'Development Status :: 3 - Alpha',
      'Intended Audience :: Science/Research',
