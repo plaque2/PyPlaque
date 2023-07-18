@@ -39,6 +39,9 @@ setup(
           'numpy',
           'opencv-python',
           'matplotlib',
+          'Pillow',
+          'scipy',
+          'pytest'
       ],
 
    classifiers=[
