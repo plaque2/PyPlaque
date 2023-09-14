@@ -1,6 +1,9 @@
 import numpy as np
 from skimage import measure
 from PyPlaque.utils.fp_readout_object import PlaqueObjectReadout
+### probably needs to somehow integrated 
+from PyPlaque.utils.segment_plaque import get_plaque_mask
+
 
 class PlaqueImageReadout():
     """
@@ -108,14 +111,19 @@ class PlaqueImageReadout():
         return round(nuclei_area_sum/((self.params['minCellArea'] + self.params['maxCellArea'])/2))
     
     def get_plaque_count(self):
-        labelImage = measure.label(self.plaque_mask)
-        labelImage[~self.plaque_mask] = 0
-        props = measure.regionprops(labelImage)
-        plaqueRegionProperties = []
-        for prop in props:
-            if  self.params['min_plaque_area'] < prop.area:
-                plaqueRegionProperties.append(prop)
-        return len(plaqueRegionProperties)
+        plaqueRegionProperties ,globalPeakCoords = get_plaque_mask(self.plaque_image,self.params)
+        numberOfPlaques =  len(globalPeakCoords)
+        #below is the original code the problem was that it was calculating the number of plaque regions
+        #and not summing the peaks of the individual plaques, hence it was inconsistent with  plaque 2.0
+        # labelImage = measure.label(self.plaque_mask)
+        # labelImage[~self.plaque_mask] = 0
+        # props = measure.regionprops(labelImage)
+        # plaqueRegionProperties = []
+        # for prop in props:
+        #     if  self.params['min_plaque_area'] < prop.area:
+        #         plaqueRegionProperties.append(prop)
+        # return len(plaqueRegionProperties)
+        return numberOfPlaques
 
     def get_infected_nuclei_count(self):
         labelImage = measure.label(self.plaque_mask)

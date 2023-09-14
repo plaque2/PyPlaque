@@ -1,9 +1,27 @@
 from skimage import restoration
 import numpy as np
+from skimage.morphology import disk, opening
+from skimage import io
+import cv2
+
+
 
 def remove_background(img: np.array, radius: float) -> np.array:
     img = np.array(img).astype(np.uint16)
 
-    background = restoration.rolling_ball(img, radius=radius)
+
+    selem = disk(radius)
+
+    selem = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2*radius + 1, 2*radius + 1))
+
+    # Perform morphological opening
+    # bcg = cv2.morphologyEx(inputImage, cv2.MORPH_OPEN, kernel)
+
+    print('new')
+    # background = restoration.rolling_ball(img, radius=radius)
+    # background = opening(img,selem)
+    background =  cv2.morphologyEx(img, cv2.MORPH_OPEN, selem)
+
+
 
     return background, img-background

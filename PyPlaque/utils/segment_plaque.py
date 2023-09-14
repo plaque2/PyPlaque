@@ -2,24 +2,25 @@ import numpy as np
 from skimage import measure
 from scipy import ndimage as ndi
 import skimage
-
-
+import matplotlib.pyplot as plt
+import cv2
 def getAllPlaqueRegions(image,threshold,plqConnect):
     BW =  image > threshold
     distance = ndi.distance_transform_edt(~BW) 
     BW2 = distance <= plqConnect    
-    return BW2
+     # Label connected regions
+    labelImage = measure.label(BW2)
+    # Remove elements from the label matrix which were not present in the original binary image
+    labelImage[~BW] = 0
+
+    return labelImage
 
 
 def get_plaque_mask(inputImage,virus_params):
-    BW =  getAllPlaqueRegions(inputImage,
+    labelImage =  getAllPlaqueRegions(inputImage,
                               virus_params['virus_threshold'],
                               virus_params['plaque_connectivity'])
-    # Label connected regions
-    labelImage = measure.label(BW)
-
-    # Remove elements from the label matrix which were not present in the original binary image
-    labelImage[~BW] = 0
+   
  
     # Calculate various region properties of the image
     props = measure.regionprops(labelImage)
@@ -63,7 +64,7 @@ def get_plaque_mask(inputImage,virus_params):
         coordinates = skimage.feature.peak_local_max(blurredImage, 
                                                      min_distance=virus_params['peak_region_size'],
                                                      exclude_border = False)
-        
+        print(coordinates)
         peakCounts.append(len(coordinates))  
         if idx == 0:
             globalPeakCoords = np.array([coordinates[:, 0] + x1, coordinates[:, 1] + y1]).T
