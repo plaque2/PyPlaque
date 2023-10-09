@@ -1,7 +1,9 @@
-import numpy as np
 import cv2
-from skimage.measure import label, regionprops, moments
+import numpy as np
+from skimage.measure import label, moments, regionprops
+
 from PyPlaque.utils import check_numbers
+
 
 class Plaque:
     """
@@ -46,10 +48,10 @@ class Plaque:
         _Arguments_:
         """
         plq_bbox_area = (self.bbox[3] - self.bbox[1]) * (self.bbox[2] - self.bbox[0]) # assuming bbox = (minr, minc, maxr, maxc)
-        number_of_white_pix = np.sum(self.mask > 0)  # extracting non-white pixels 
+        number_of_white_pix = np.sum(self.mask > 0)  # extracting non-white pixels
         plq_area = number_of_white_pix
 
-        return plq_bbox_area, plq_area 
+        return plq_bbox_area, plq_area
 
     def eccentricity(self):
         """
@@ -61,7 +63,6 @@ class Plaque:
         """
         # find the contours
         contours,_ = cv2.findContours(self.mask, cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-        # print("Number of contours detected:", len(contours))
 
         ecc = 0
         # select the first contour that has more than 5 points and fit an ellipse based on that
@@ -75,8 +76,6 @@ class Plaque:
                     else:
                         semi_major_axis = ellipse[1][0]/2
                         semi_minor_axis = ellipse[1][1]/2
-                        # print("semi_minor_axis:",semi_minor_axis)
-                        # print("semi_major_axis:",semi_major_axis)
 
                         if semi_minor_axis > semi_major_axis:
                             temp = semi_minor_axis
