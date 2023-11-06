@@ -78,7 +78,34 @@ class PlaqueObjectReadout():
         return self.plaque_object_properties.axis_major_length, \
                 self.plaque_object_properties.axis_minor_length
     
+    def get_custom_eccentricity(self,):
+        # Calculate the image moments
+        y_indices, x_indices = np.nonzero(binary_image)
+        x_mean = x_indices.mean()
+        y_mean = y_indices.mean()
+        x_indices_centered = x_indices - x_mean
+        y_indices_centered = y_indices - y_mean
+
+        # Calculate central moments
+        mu11 = (x_indices_centered * y_indices_centered).sum()
+        mu20 = (x_indices_centered * x_indices_centered).sum()
+        mu02 = (y_indices_centered * y_indices_centered).sum()
+
+        # Calculate the axis lengths of the ellipse (major_axis_length, minor_axis_length)
+        # The math comes from the eigenvalues of the covariance matrix of the object's x and y pixel coordinates
+        a = mu20 + mu02
+        b = np.sqrt((mu20 - mu02) ** 2 + 4 * mu11 ** 2)
+        major_axis_length = np.sqrt(2) * np.sqrt(a + b)
+        minor_axis_length = np.sqrt(2) * np.sqrt(a - b)
+
+        # Calculate eccentricity
+        eccentricity = np.sqrt(1 - (minor_axis_length / major_axis_length) ** 2)
+
+        return eccentricity
+
+
     def get_eccentricity(self):
+        
         return self.plaque_object_properties.eccentricity
     
     def get_convex_area(self):

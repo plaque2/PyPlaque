@@ -69,34 +69,38 @@ class PlaqueImageReadout():
         return self.nuclei_image_name.split("_")[1][1:]
 
     def get_max_nuclei_intensity(self):
-        return np.max(self.nuclei_image*self.nuclei_mask) #creating a masked image 
+        return np.max(self.nuclei_image) #creating a masked image 
 
     def get_max_plaque_intensity(self):
-        return np.max(self.plaque_image*self.plaque_mask) #creating a masked image 
+        return np.max(self.plaque_image) #creating a masked image 
           
     def get_total_nuclei_intensity(self):
-       return np.sum(self.nuclei_image*self.nuclei_mask) #creating a masked image 
+       return np.sum(self.nuclei_image.astype(np.float64)) #creating a masked image 
 
     def get_total_plaque_intensity(self):
-       return np.sum(self.plaque_image*self.plaque_mask) #creating a masked image 
+       # Cast the image to a larger data type before summing to prevent overflow
+        # Convert to int64 to avoid overflow in integer sum
+       total_intensity = np.sum(self.plaque_image.astype(np.int64))
+       return total_intensity
+       
         
     def get_mean_nuclei_intensity(self):
         if len(np.nonzero(self.nuclei_image*self.nuclei_mask)[0])==0:
             return 0
         else:
-            return np.mean(np.nonzero(self.nuclei_image*self.nuclei_mask)) #creating a masked image 
+            return np.mean(np.nonzero(self.nuclei_image.astype(np.float64))) #creating a masked image 
 
     def get_mean_plaque_intensity(self):
-        if len(np.nonzero(self.plaque_image*self.plaque_mask)[0])==0:
+        if len(np.nonzero(self.plaque_image)[0])==0:
             return 0
         else:
-            return np.mean(np.nonzero(self.plaque_image*self.plaque_mask)) #creating a masked image 
+            return np.mean(self.plaque_image.astype(np.float64)) #creating a masked image 
 
     def get_median_plaque_intensity(self):
-        if len(np.nonzero(self.plaque_image*self.plaque_mask)[0])==0:
+        if len(np.nonzero(self.plaque_image)[0])==0:
             return 0
         else:
-            return np.median(np.nonzero(self.plaque_image*self.plaque_mask))
+            return np.median(self.plaque_image.astype(np.float64))
     
     def get_nuclei_count(self):
         # mask = self.nuclei_mask
