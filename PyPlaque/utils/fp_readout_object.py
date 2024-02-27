@@ -63,15 +63,11 @@ class PlaqueObjectReadout():
         return self.nuclei_image_name.split("_")[1][1:]
     
     def get_area(self):
-        
-<<<<<<< HEAD
-        return np.sum(self.plaque_object_mask.astype(np.int64))
+        return np.sum(self.plaque_object_properties.image.astype(np.float64))
+      
     def get_perimeter(self):
         return self.plaque_object_properties.perimeter
-=======
-        return np.sum(self.plaque_object_properties.image.astype(np.float64))
-    
->>>>>>> 76205f05c72845de61626dcf892cc258c2c0fdb7
+
     def get_centroid(self):
         return self.plaque_object_properties.centroid
     
@@ -119,8 +115,6 @@ class PlaqueObjectReadout():
         return self.plaque_object_properties.area_convex
     
     def roundness(self):
-
-
 
         image = self.plaque_object_properties.image_convex 
         area = self.plaque_object_properties.area_convex

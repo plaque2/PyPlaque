@@ -1,8 +1,10 @@
 import numpy as np
 from skimage import measure
+
 from PyPlaque.utils.fp_readout_object import PlaqueObjectReadout
 ### probably needs to somehow integrated 
 from PyPlaque.utils.segment_plaque import get_plaque_mask
+
 
 
 class PlaqueImageReadout():
@@ -165,4 +167,3 @@ class PlaqueImageReadout():
                                         params)
 
         return plq_object
-    
