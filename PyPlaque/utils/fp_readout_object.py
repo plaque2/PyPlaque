@@ -63,8 +63,10 @@ class PlaqueObjectReadout():
         return self.nuclei_image_name.split("_")[1][1:]
     
     def get_area(self):
-        return np.sum(self.plaque_object_mask)
-    
+        
+        return np.sum(self.plaque_object_mask.astype(np.int64))
+    def get_perimeter(self):
+        return self.plaque_object_properties.perimeter
     def get_centroid(self):
         return self.plaque_object_properties.centroid
     
