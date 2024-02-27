@@ -1,10 +1,12 @@
+import pathlib
+
 from setuptools import setup
+
+import PyPlaque
 
 # read the contents of your README file
 
-import pathlib
 
-import PyPlaque
 
 cwd = pathlib.Path(__file__).parent.resolve()
 
@@ -23,7 +25,8 @@ setup(
   author = 'Plaque2.0 Team, AILS Institute, CASUS HZDR',
   author_email = 'ayakimovich@ails.institute',
   url = 'https://github.com/plaque2/PyPlaque',
-  download_url = 'https://github.com/plaque2/PyPlaque/archive/{}.tar.gz'.format(version),
+  download_url = 'https://github.com/plaque2/PyPlaque/archive/{}.tar.gz' \
+            .format(version),
   scripts=['PyPlaque/experiment/experimentCVP.py',
             'PyPlaque/experiment/experimentFP.py',
             'PyPlaque/phenotypes/CrystalVioletPlaque.py',
@@ -36,8 +39,11 @@ setup(
           'numpy',
           'opencv-python',
           'matplotlib',
+          'Pillow',
+          'scipy',
+          'pytest'
       ],
-  
+
    classifiers=[
      'Development Status :: 3 - Alpha',
      'Intended Audience :: Science/Research',

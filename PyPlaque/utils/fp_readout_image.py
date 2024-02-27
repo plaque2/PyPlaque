@@ -1,6 +1,11 @@
 import numpy as np
 from skimage import measure
+
 from PyPlaque.utils.fp_readout_object import PlaqueObjectReadout
+### probably needs to somehow integrated 
+from PyPlaque.utils.segment_plaque import get_plaque_mask
+
+
 
 class PlaqueImageReadout():
     """
@@ -66,34 +71,38 @@ class PlaqueImageReadout():
         return self.nuclei_image_name.split("_")[1][1:]
 
     def get_max_nuclei_intensity(self):
-        return np.max(self.nuclei_image*self.nuclei_mask) #creating a masked image 
+        return np.max(self.nuclei_image) #creating a masked image 
 
     def get_max_plaque_intensity(self):
-        return np.max(self.plaque_image*self.plaque_mask) #creating a masked image 
+        return np.max(self.plaque_image) #creating a masked image 
           
     def get_total_nuclei_intensity(self):
-       return np.sum(self.nuclei_image*self.nuclei_mask) #creating a masked image 
+       return np.sum(self.nuclei_image.astype(np.float64)) #creating a masked image 
 
     def get_total_plaque_intensity(self):
-       return np.sum(self.plaque_image*self.plaque_mask) #creating a masked image 
+       # Cast the image to a larger data type before summing to prevent overflow
+        # Convert to int64 to avoid overflow in integer sum
+       total_intensity = np.sum(self.plaque_image.astype(np.int64))
+       return total_intensity
+       
         
     def get_mean_nuclei_intensity(self):
         if len(np.nonzero(self.nuclei_image*self.nuclei_mask)[0])==0:
             return 0
         else:
-            return np.mean(np.nonzero(self.nuclei_image*self.nuclei_mask)) #creating a masked image 
+            return np.mean(np.nonzero(self.nuclei_image.astype(np.float64))) #creating a masked image 
 
     def get_mean_plaque_intensity(self):
-        if len(np.nonzero(self.plaque_image*self.plaque_mask)[0])==0:
+        if len(np.nonzero(self.plaque_image)[0])==0:
             return 0
         else:
-            return np.mean(np.nonzero(self.plaque_image*self.plaque_mask)) #creating a masked image 
+            return np.mean(self.plaque_image.astype(np.float64)) #creating a masked image 
 
     def get_median_plaque_intensity(self):
-        if len(np.nonzero(self.plaque_image*self.plaque_mask)[0])==0:
+        if len(np.nonzero(self.plaque_image)[0])==0:
             return 0
         else:
-            return np.median(np.nonzero(self.plaque_image*self.plaque_mask))
+            return np.median(self.plaque_image.astype(np.float64))
     
     def get_nuclei_count(self):
         # mask = self.nuclei_mask
@@ -108,14 +117,19 @@ class PlaqueImageReadout():
         return round(nuclei_area_sum/((self.params['minCellArea'] + self.params['maxCellArea'])/2))
     
     def get_plaque_count(self):
-        labelImage = measure.label(self.plaque_mask)
-        labelImage[~self.plaque_mask] = 0
-        props = measure.regionprops(labelImage)
-        plaqueRegionProperties = []
-        for prop in props:
-            if  self.params['min_plaque_area'] < prop.area:
-                plaqueRegionProperties.append(prop)
-        return len(plaqueRegionProperties)
+        plaqueRegionProperties ,globalPeakCoords = get_plaque_mask(self.plaque_image,self.params)
+        numberOfPlaques =  len(globalPeakCoords)
+        #below is the original code the problem was that it was calculating the number of plaque regions
+        #and not summing the peaks of the individual plaques, hence it was inconsistent with  plaque 2.0
+        # labelImage = measure.label(self.plaque_mask)
+        # labelImage[~self.plaque_mask] = 0
+        # props = measure.regionprops(labelImage)
+        # plaqueRegionProperties = []
+        # for prop in props:
+        #     if  self.params['min_plaque_area'] < prop.area:
+        #         plaqueRegionProperties.append(prop)
+        # return len(plaqueRegionProperties)
+        return numberOfPlaques
 
     def get_infected_nuclei_count(self):
         labelImage = measure.label(self.plaque_mask)
@@ -153,4 +167,3 @@ class PlaqueImageReadout():
                                         params)
 
         return plq_object
-    

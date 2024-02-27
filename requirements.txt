@@ -1,3 +1,7 @@
 numpy
 scikit-image
 opencv-python
+matplotlib
+Pillow
+scipy
+pytest
