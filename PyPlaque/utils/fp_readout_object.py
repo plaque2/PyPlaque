@@ -104,7 +104,7 @@ class PlaqueObjectReadout():
         
         roundness = (4 * np.pi * area) / ( (perimeter ** 2))
         
-        return perimeter,area
+        return roundness
     
     def get_number_of_peaks(self):
         globalPeakCoords=[]
