@@ -63,10 +63,11 @@ class PlaqueObjectReadout():
         return self.nuclei_image_name.split("_")[1][1:]
     
     def get_area(self):
-        
-        return np.sum(self.plaque_object_mask.astype(np.int64))
+        return np.sum(self.plaque_object_properties.image.astype(np.float64))
+      
     def get_perimeter(self):
         return self.plaque_object_properties.perimeter
+
     def get_centroid(self):
         return self.plaque_object_properties.centroid
     
@@ -114,16 +115,22 @@ class PlaqueObjectReadout():
         return self.plaque_object_properties.area_convex
     
     def roundness(self):
-        point1 = np.array((self.plaque_object_properties.bbox[3],
-                           self.plaque_object_properties.bbox[2]))
-        point2 = np.array(((self.plaque_object_properties.bbox[3] \
-                            +self.plaque_object_properties.bbox[1])/2,
-                            (self.plaque_object_properties.bbox[2] \
-                             +self.plaque_object_properties.bbox[0])/2))
-        radius = np.linalg.norm(point1 - point2)
-        perimeter = 2 * np.pi * radius
-        ratio = 4 * np.pi * self.get_area() / ( perimeter ** 2 ) 
-        return 1-ratio
+
+        image = self.plaque_object_properties.image_convex 
+        area = self.plaque_object_properties.area_convex
+        #  Find contours
+        contours = skimage.measure.find_contours(image)
+
+        # Assuming the largest contour corresponds to the object
+        contour = max(contours, key=len)
+
+        # Calculate the perimeter
+        perimeter = np.sum(np.sqrt(np.sum(np.diff(contour, axis=0)**2, axis=1)))
+        perimeter = self.plaque_object_properties.perimeter
+        
+        roundness = (4 * np.pi * area) / ( (perimeter ** 2))
+        
+        return perimeter,area
     
     def get_number_of_peaks(self):
         globalPeakCoords=[]
