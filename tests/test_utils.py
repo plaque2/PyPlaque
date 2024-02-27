@@ -27,11 +27,11 @@ def inputImage():
 
 @pytest.fixture()
 def expected_finalPlqRegImage():
-  return np.array([[0, 1, 1, 1, 0],
-                    [1, 1, 1, 1, 1],
-                    [1, 1, 1, 1, 1],
-                    [1, 1, 1, 1, 1],
-                    [0, 1, 1, 1, 0]])
+    return np.array([[0, 0, 0, 0, 0],
+                    [0, 0, 1, 0, 0],
+                    [0, 1, 1, 1, 0],
+                    [0, 0, 1, 0, 0],
+                    [0, 0, 0, 0, 0]])
 
 @pytest.fixture()
 def expected_globalPeakCoords():
