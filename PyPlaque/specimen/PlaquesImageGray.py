@@ -1,6 +1,6 @@
 import numpy as np
 
-from PyPlaque.specimen import PlaquesMask
+from PyPlaque.specimen.PlaquesMask import PlaquesMask
 from PyPlaque.utils import fixed_threshold
 
 

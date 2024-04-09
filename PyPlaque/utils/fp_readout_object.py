@@ -95,16 +95,19 @@ class PlaqueObjectReadout():
         #  Find contours
         contours = skimage.measure.find_contours(image)
 
-        # Assuming the largest contour corresponds to the object
-        contour = max(contours, key=len)
+        if len(contours) != 0:
+            # Assuming the contours list is not empty and largest contour corresponds to the object
+            contour = max(contours, key=len)
 
-        # Calculate the perimeter
-        perimeter = np.sum(np.sqrt(np.sum(np.diff(contour, axis=0)**2, axis=1)))
-        perimeter = self.plaque_object_properties.perimeter
-        
-        roundness = (4 * np.pi * area) / ( (perimeter ** 2))
-        
-        return roundness
+            # Calculate the perimeter
+            # perimeter = np.sum(np.sqrt(np.sum(np.diff(contour, axis=0)**2, axis=1)))
+            perimeter = self.plaque_object_properties.perimeter
+            
+            roundness = (4 * np.pi * area) / ( (perimeter ** 2))
+            
+            return roundness 
+        else:
+            return 0
     
     def get_number_of_peaks(self):
         globalPeakCoords=[]
