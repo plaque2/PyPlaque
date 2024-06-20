@@ -108,5 +108,5 @@ class Plaque:
     point2 = np.array(((self.bbox[3]+self.bbox[1])/2,(self.bbox[2]+self.bbox[0])/2))
     radius = np.linalg.norm(point1 - point2)
     perimeter = 2 * np.pi * radius
-    ratio = 4 * np.pi * plq_area / ( perimeter ** 2 )
-    return ratio
+    roundness = 4 * np.pi * plq_area / ( perimeter ** 2 )
+    return roundness

@@ -4,7 +4,7 @@ from matplotlib.patches import Circle
 from skimage.measure import label, regionprops
 from skimage.segmentation import clear_border
 
-from PyPlaque.phenotypes import Plaque
+from PyPlaque.phenotypes.Plaque import Plaque
 from PyPlaque.utils import centroid
 
 

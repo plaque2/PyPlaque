@@ -90,21 +90,16 @@ class PlaqueObjectReadout():
     
     def roundness(self):
 
-        image = self.plaque_object_properties.image_convex 
-        area = self.plaque_object_properties.area_convex
-        #  Find contours
-        contours = skimage.measure.find_contours(image)
+        area = self.plaque_object_properties.area
+        bbox = self.plaque_object_properties.bbox
+        point1 = np.array((bbox[3],bbox[2]))
+        point2 = np.array(((bbox[3]+bbox[1])/2,(bbox[2]+bbox[0])/2))
+        radius = np.linalg.norm(point1 - point2)
+        perimeter = 2 * np.pi * radius
+        roundness = 4 * np.pi * area / ( perimeter ** 2 )
+            
+        return roundness 
 
-        # Assuming the largest contour corresponds to the object
-        contour = max(contours, key=len)
-
-        # Calculate the perimeter
-        perimeter = np.sum(np.sqrt(np.sum(np.diff(contour, axis=0)**2, axis=1)))
-        perimeter = self.plaque_object_properties.perimeter
-        
-        roundness = (4 * np.pi * area) / ( (perimeter ** 2))
-        
-        return roundness
     
     def get_number_of_peaks(self):
         globalPeakCoords=[]
