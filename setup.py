@@ -13,7 +13,7 @@ cwd = pathlib.Path(__file__).parent.resolve()
 # Get the long description from the README file
 long_description = (cwd / 'README.md').read_text(encoding='utf-8')
 
-version = 'v0.1.0'
+version = 'v0.2.0'
 
 setup(
   name = 'PyPlaque',
@@ -35,13 +35,11 @@ setup(
             'PyPlaque/specimen/PlaquesImageRGB.py'],
   keywords = ['Virus', 'Plaque', 'Virology', 'Microscopy', 'Computer vision'],
   install_requires=[
-          'scikit-image',
-          'numpy',
-          'opencv-python',
-          'matplotlib',
-          'Pillow',
-          'scipy',
-          'pytest'
+          'scikit-image>=0.24.0',
+          'numpy>=2.0.0',
+          'opencv-python>=4.10.0.84',
+          'Pillow>=10.3.0',
+          'scipy>=1.13.1'
       ],
 
    classifiers=[
@@ -49,10 +47,10 @@ setup(
      'Intended Audience :: Science/Research',
      'Topic :: Scientific/Engineering :: Bio-Informatics ',
      'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-     'Programming Language :: Python :: 3.8',
      'Programming Language :: Python :: 3.9',
      'Programming Language :: Python :: 3.10',
      'Programming Language :: Python :: 3.11',
+     'Programming Language :: Python :: 3.12'
    ],
 
   long_description=long_description,
