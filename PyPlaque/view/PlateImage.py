@@ -10,7 +10,7 @@ from skimage.segmentation import clear_border
 class PlateImage:
   """
   **PlateImage Class** is aimed to contain a full multititre plate image and
-  it's respective binary mask.
+  its respective binary mask.
 
   _Arguments_:
 
@@ -99,14 +99,14 @@ class PlateImage:
 
     l = lc_zip
     if not self.inverted:
-      r_no = 1
-      c_no = 1
+      r_no = 0
+      c_no = 0
     else:
-      r_no = 1
+      r_no = 0
       c_no = self.n_columns
 
     while len(l)>0:
-      x_sorted = sorted(l, key=lambda tup: tup[1])
+      x_sorted = sorted(l, key=lambda tup: tup[1]) 
       column = x_sorted[:self.n_rows]
       y_sorted = sorted(column, key=lambda tup: tup[0])
 
@@ -119,7 +119,7 @@ class PlateImage:
           r_no +=1
 
         c_no +=1
-        r_no = 1
+        r_no = 0
       else:
         for (maxr,minc) in y_sorted:
           temp  = [k for k,v in well_dict.items() if ((int(v['maxr'])
@@ -129,14 +129,14 @@ class PlateImage:
           r_no +=1
 
         c_no -=1
-        r_no = 1
+        r_no = 0
 
       l = x_sorted[self.n_rows:]
 
 
     return well_dict
 
-  def plot_well_positions(self,save=True, folder_path = '../data/results'):
+  def plot_well_positions(self,save_path = None):
     """
     **plot_well_positions method** plot boxes around individual wells of
     the plate (inferred from plate mask), with rows numbered starting from 1
@@ -158,7 +158,7 @@ class PlateImage:
     ax.set_axis_off()
     plt.title('Annotated Wells')
     plt.tight_layout()
-    if save:
-      plt.savefig(os.path.join(folder_path,'output.svg'),
-      bbox_inches='tight', dpi=300)
+    if save_path:
+      plt.savefig(save_path,bbox_inches='tight', dpi=300)
     plt.show()
+    return

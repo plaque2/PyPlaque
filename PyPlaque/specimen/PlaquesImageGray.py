@@ -46,10 +46,13 @@ class PlaquesImageGray(PlaquesMask):
       if (not isinstance(plaques_mask, np.ndarray)) or (not plaques_mask.ndim
       == 2):
         raise TypeError("Mask atribute must be a 2D numpy array")
+      self.plaques_mask = plaques_mask
     elif threshold and sigma:
       plaques_mask = fixed_threshold(image, threshold, sigma)
+      self.plaques_mask = plaques_mask
     else:
       raise ValueError("Either mask or fixed threshold must be provided")
 
     super(PlaquesImageGray, self).__init__(name, plaques_mask)
     self.image = image
+    

@@ -30,6 +30,7 @@ class Plaque:
 
     self.mask = mask
     self.area = regionprops(label(mask))[0].area
+    self.perimeter = regionprops(label(mask))[0].perimeter
 
     if centroid:
       if (not isinstance(centroid, tuple)) or check_numbers(centroid):
@@ -104,9 +105,9 @@ class Plaque:
     _Arguments_:
     """
     _, plq_area = self.measure()
-    point1 = np.array((self.bbox[3],self.bbox[2]))
-    point2 = np.array(((self.bbox[3]+self.bbox[1])/2,(self.bbox[2]+self.bbox[0])/2))
-    radius = np.linalg.norm(point1 - point2)
+    point1 = np.array((self.bbox[3],self.bbox[2])) #top right corner
+    point2 = np.array(((self.bbox[3]+self.bbox[1])/2,(self.bbox[2]+self.bbox[0])/2)) #centre
+    radius = np.linalg.norm(point1 - point2) #distance between top right corner and centre
     perimeter = 2 * np.pi * radius
     roundness = 4 * np.pi * plq_area / ( perimeter ** 2 )
     return roundness

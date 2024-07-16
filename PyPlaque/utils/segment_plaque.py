@@ -1,9 +1,10 @@
-import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import skimage
 from scipy import ndimage as ndi
 from skimage import measure
+
+from PyPlaque.utils import remove_background
 
 
 def getAllPlaqueRegions(image,threshold,plqConnect):
@@ -74,3 +75,30 @@ def get_plaque_mask(inputImage,virus_params):
                                                                       coordinates[:, 1] + y1]).T))
 
     return finalPlqRegImage, globalPeakCoords
+
+
+def plot_virus_contours(inputImage,virus_params,save_path=None):
+    _, bg_removed_img = remove_background(inputImage,
+                                  radius=virus_params['correction_ball_radius'])
+    finalPlqRegImage, globalPeakCoords = get_plaque_mask(inputImage,virus_params)
+    _, ax = plt.subplots(figsize=(8, 8))
+
+    # Display inputImage with custom colormap and intensity range
+    ax.imshow(bg_removed_img, cmap=plt.get_cmap('gray'), vmin=500, vmax=6000, alpha=1, extent=[0, inputImage.shape[1], 
+                                                                                inputImage.shape[0], 0])
+    # ax.imshow(finalPlqRegImage, cmap=plt.cm.gray)
+
+    # Find contours in finalPlqRegImage
+    contours = measure.find_contours(finalPlqRegImage)
+
+    # Plot contours with random colors
+    for contour in contours:
+        ax.plot(contour[:, 1], contour[:, 0], linewidth=2,color='yellow')
+
+    ax.plot(globalPeakCoords[:, 1], globalPeakCoords[:, 0], 'r.', markersize=15)
+    ax.axis('off')
+    ax.set_title('Peak local max with contours')
+    if save_path:
+        plt.savefig(save_path,bbox_inches='tight', dpi=300)
+    plt.show()
+    return

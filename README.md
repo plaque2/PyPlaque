@@ -88,7 +88,7 @@ name - (str, required) string, image sample name for identification
 plaques_mask - (np.array, required) numpy array containing
 binary mask of all virological plaque objects.
 
-**get_palques method** returns a list of individual plaques
+**get_plaques method** returns a list of individual plaques
 stored as binary numpy arrays.
 
 _Arguments_:

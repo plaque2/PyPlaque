@@ -4,7 +4,7 @@ import pytest
 
 from PyPlaque.utils import remove_artifacts, remove_background
 from PyPlaque.utils import centroid, check_numbers, fixed_threshold
-from PyPlaque.utils.segment_plaque import get_plaque_mask
+from PyPlaque.utils import get_plaque_mask
 
 @pytest.fixture()
 def utils_remove_artifacts_input():
