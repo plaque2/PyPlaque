@@ -6,6 +6,7 @@ Pillow
 pytest
 scipy
 scikit-image
+scikit-learn
 seaborn
 tqdm
 tifffile
