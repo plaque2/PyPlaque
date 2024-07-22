@@ -37,9 +37,14 @@ setup(
   install_requires=[
           'scikit-image>=0.24.0',
           'numpy>=2.0.0',
+          'matplotlib>=3.7.0',
           'opencv-python>=4.10.0.84',
           'Pillow>=10.3.0',
-          'scipy>=1.13.1'
+          'pandas>=1.5.3',
+          'scipy>=1.13.1',
+          'seaborn>=0.12.2',
+          'tqdm>=4.66.4',
+          'tifffile>=2023.2.28'
       ],
 
    classifiers=[

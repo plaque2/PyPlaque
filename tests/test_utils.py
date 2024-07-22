@@ -47,7 +47,9 @@ def virus_params():
     'min_plaque_area': 3,
     'plaque_gaussian_filter_sigma': 1.0,
     'plaque_gaussian_filter_size': 3,
-    'peak_region_size': 1
+    'peak_region_size': 1,
+    'use_picks': False,
+    'fine_plaque_detection_flag': True
   }
 
 def test_centroid():

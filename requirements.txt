@@ -1,7 +1,11 @@
 numpy
-scikit-image
 opencv-python
+pandas
 matplotlib
 Pillow
-scipy
 pytest
+scipy
+scikit-image
+seaborn
+tqdm
+tifffile
