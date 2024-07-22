@@ -4,6 +4,7 @@ from skimage import measure
 
 from PyPlaque.utils import get_plaque_mask
 from PyPlaque.view import PlaqueObjectReadout
+from PyPlaque.utils import picks_area
 
 
 class WellImageReadout:
@@ -109,7 +110,10 @@ class WellImageReadout:
     
     def get_plaque_count(self):
         _ ,globalPeakCoords = get_plaque_mask(self.plaque_image,self.params)
-        numberOfPlaques =  len(globalPeakCoords)
+        if globalPeakCoords is None:
+            numberOfPlaques = 0
+        else:
+            numberOfPlaques = len(globalPeakCoords)
         return numberOfPlaques
 
     def get_infected_nuclei_count(self):
@@ -118,7 +122,10 @@ class WellImageReadout:
         props = measure.regionprops(labelImage)
         plaqueRegionProperties_area = 0
         for prop in props:
-            plaque_area = prop.area
+            if self.params['use_picks']:
+                plaque_area = picks_area(prop.image)
+            else:
+                plaque_area = prop.area
             if  self.params['min_plaque_area'] < plaque_area:
                 plaqueRegionProperties_area += plaque_area
         return round(plaqueRegionProperties_area/
@@ -133,7 +140,10 @@ class WellImageReadout:
         props = measure.regionprops(labelImage)
         plaqueRegionProperties = []
         for prop in props:
-            plaque_area = prop.area
+            if self.params['use_picks']:
+                plaque_area = picks_area(prop.image)
+            else:
+                plaque_area = prop.area
             if  self.params['min_plaque_area'] < plaque_area:
                 plaqueRegionProperties.append(prop)
         return plaqueRegionProperties

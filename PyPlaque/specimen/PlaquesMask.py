@@ -5,7 +5,7 @@ from skimage.measure import label, regionprops
 from skimage.segmentation import clear_border
 
 from PyPlaque.phenotypes.Plaque import Plaque
-from PyPlaque.utils import centroid
+from PyPlaque.utils import centroid, picks_area
 
 
 class PlaquesMask:
@@ -20,7 +20,7 @@ class PlaquesMask:
   plaques_mask - (np.array, required) numpy array of the
   binary mask of all plaque objects.
   """
-  def __init__(self, name, plaques_mask):
+  def __init__(self, name, plaques_mask, use_picks=True):
     # check types
     if not isinstance(name, str):
       raise TypeError('Image name atribute must be a str')
@@ -30,8 +30,10 @@ class PlaquesMask:
 
     self.name = name
     self.plaques_mask = plaques_mask
+    self.use_picks = use_picks
     self.plaques_list = []
     self.measure_dict = {}
+
 
   def get_plaques(self, min_area = 100, max_area = 200):
     """
@@ -55,12 +57,16 @@ class PlaquesMask:
     for _, plaque in enumerate(regionprops(
                                 label(
                                 clear_border(self.plaques_mask)))):
-      plaque_area = plaque.area
+
+      if self.use_picks:
+        plaque_area = picks_area(plaque.image)
+      else:
+        plaque_area = plaque.area
 
       if plaque_area >= min_area and plaque_area <= max_area:
         minr, minc, maxr, maxc = plaque.bbox
         plq = Plaque(self.plaques_mask[minr:maxr, minc:maxc], plaque.centroid,
-                            (minr, minc, maxr, maxc))
+                            (minr, minc, maxr, maxc),self.use_picks)
         plaques_list.append(plq)
     return plaques_list
 
@@ -101,7 +107,10 @@ class PlaquesMask:
       centre_ls.append([(plq.bbox[3]+plq.bbox[1])/2,
       (plq.bbox[2]+plq.bbox[0])/2])
 
-    cent0, cent1 = centroid(np.array(centre_ls))
+    if len(centre_ls) != 0:
+      cent0, cent1 = centroid(np.array(centre_ls))
+    else:
+      cent0, cent1 = None, None
 
     measure_dict['mean_plq_size'] = mean_plq_size
     measure_dict['med_plq_size'] = med_plq_size
@@ -156,10 +165,11 @@ class PlaquesMask:
 
     #This gives the maximum distance of a plaque bbox corner from the centroid
     # so that a circle can be drawn around the cluster of plaques
-    main_circle = Circle((self.measure_dict['centroid'][0],
-    self.measure_dict['centroid'][1]),radius+max_margin,
-    fill = False, color = 'white')
-    ax.add_patch(main_circle)
+    if self.measure_dict['centroid'][0]:
+      main_circle = Circle((self.measure_dict['centroid'][0],
+      self.measure_dict['centroid'][1]),radius+max_margin,
+      fill = False, color = 'white')
+      ax.add_patch(main_circle)
 
     plt.title(str(i)+","+str(j))
     plt.tight_layout()

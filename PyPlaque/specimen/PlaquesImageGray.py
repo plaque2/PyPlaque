@@ -35,7 +35,8 @@ class PlaquesImageGray(PlaquesMask):
                 image,
                 plaques_mask = None,
                 threshold = None,
-                sigma = 5):
+                sigma = 5,
+                use_picks = True):
     # check types
     if not isinstance(name, str):
       raise TypeError("Image name atribute must be a str")
@@ -53,6 +54,6 @@ class PlaquesImageGray(PlaquesMask):
     else:
       raise ValueError("Either mask or fixed threshold must be provided")
 
-    super(PlaquesImageGray, self).__init__(name, plaques_mask)
+    super(PlaquesImageGray, self).__init__(name, plaques_mask,use_picks)
     self.image = image
     
