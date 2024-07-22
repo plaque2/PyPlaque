@@ -6,11 +6,13 @@ import numpy as np
 from skimage.measure import label, regionprops
 from skimage.segmentation import clear_border
 
+from PyPlaque.utils import picks_area
+
 
 class PlateImage:
   """
   **PlateImage Class** is aimed to contain a full multititre plate image and
-  it's respective binary mask.
+  its respective binary mask.
 
   _Arguments_:
 
@@ -35,6 +37,7 @@ class PlateImage:
                 n_columns,
                 plate_image,
                 plate_mask,
+                use_picks = True,
                 inverted = False):
     #check data types
     if not isinstance(n_rows, int):
@@ -53,6 +56,7 @@ class PlateImage:
     self.n_columns = n_columns
     self.plate_image = plate_image
     self.plate_mask = plate_mask
+    self.use_picks = use_picks
     self.inverted = inverted
 
   def get_wells(self, min_area = 100):
@@ -62,7 +66,11 @@ class PlateImage:
     """
     well_crops = []
     for _,well in enumerate(regionprops(label(clear_border(self.plate_mask)))):
-      if well.area >= min_area:
+      if self.use_picks:
+        well_area = picks_area(well.image)
+      else:
+        well_area = well.area
+      if well_area >= min_area:
         minr, minc, maxr, maxc = well.bbox
         masked_img = self.plate_image ** self.plate_mask
         well_crops.append(masked_img[minr:maxr, minc:maxc])
@@ -72,14 +80,18 @@ class PlateImage:
     """
     **get_well_positions method** returns a list of individual wells of the
     plate stored as binary numpy arrays along with a number with rows numbered
-    starting from 1 and columns numbered starting from 1.
+    starting from 0 and columns numbered starting from 0.
     """
     well_dict = {}
     well_crops = []
     lc_zip = []
     for idx,well in enumerate(regionprops(label(clear_border(self.plate_mask)))
     ):
-      if well.area >= min_area:
+      if self.use_picks:
+        well_area = picks_area(well.image)
+      else:
+        well_area = well.area
+      if well_area >= min_area:
         minr, minc, maxr, maxc = well.bbox
         masked_img = self.plate_image ** self.plate_mask
         well_crops.append(masked_img[minr:maxr, minc:maxc])
@@ -99,14 +111,14 @@ class PlateImage:
 
     l = lc_zip
     if not self.inverted:
-      r_no = 1
-      c_no = 1
+      r_no = 0
+      c_no = 0
     else:
-      r_no = 1
+      r_no = 0
       c_no = self.n_columns
 
     while len(l)>0:
-      x_sorted = sorted(l, key=lambda tup: tup[1])
+      x_sorted = sorted(l, key=lambda tup: tup[1]) 
       column = x_sorted[:self.n_rows]
       y_sorted = sorted(column, key=lambda tup: tup[0])
 
@@ -119,7 +131,7 @@ class PlateImage:
           r_no +=1
 
         c_no +=1
-        r_no = 1
+        r_no = 0
       else:
         for (maxr,minc) in y_sorted:
           temp  = [k for k,v in well_dict.items() if ((int(v['maxr'])
@@ -129,14 +141,14 @@ class PlateImage:
           r_no +=1
 
         c_no -=1
-        r_no = 1
+        r_no = 0
 
       l = x_sorted[self.n_rows:]
 
 
     return well_dict
 
-  def plot_well_positions(self,save=True, folder_path = '../data/results'):
+  def plot_well_positions(self,save_path = None):
     """
     **plot_well_positions method** plot boxes around individual wells of
     the plate (inferred from plate mask), with rows numbered starting from 1
@@ -158,7 +170,7 @@ class PlateImage:
     ax.set_axis_off()
     plt.title('Annotated Wells')
     plt.tight_layout()
-    if save:
-      plt.savefig(os.path.join(folder_path,'output.svg'),
-      bbox_inches='tight', dpi=300)
+    if save_path:
+      plt.savefig(save_path,bbox_inches='tight', dpi=300)
     plt.show()
+    return

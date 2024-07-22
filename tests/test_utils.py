@@ -4,7 +4,7 @@ import pytest
 
 from PyPlaque.utils import remove_artifacts, remove_background
 from PyPlaque.utils import centroid, check_numbers, fixed_threshold
-from PyPlaque.utils.segment_plaque import get_plaque_mask
+from PyPlaque.utils import get_plaque_mask
 
 @pytest.fixture()
 def utils_remove_artifacts_input():
@@ -47,7 +47,9 @@ def virus_params():
     'min_plaque_area': 3,
     'plaque_gaussian_filter_sigma': 1.0,
     'plaque_gaussian_filter_size': 3,
-    'peak_region_size': 1
+    'peak_region_size': 1,
+    'use_picks': False,
+    'fine_plaque_detection_flag': True
   }
 
 def test_centroid():

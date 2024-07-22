@@ -3,7 +3,7 @@ import numpy as np
 from skimage.measure import label, regionprops
 
 
-from PyPlaque.utils import check_numbers
+from PyPlaque.utils import check_numbers, picks_area, picks_perimeter
 
 
 class Plaque:
@@ -23,13 +23,20 @@ class Plaque:
   plaque object
   """
 
-  def __init__(self, mask, centroid = None, bbox = None):
+  def __init__(self, mask, centroid = None, bbox = None, use_picks=True):
     #check data types
     if (not isinstance(mask, np.ndarray)) or (not mask.ndim == 2):
       raise TypeError("Mask atribute of Plaque must be a 2D numpy array")
 
     self.mask = mask
-    self.area = regionprops(label(mask))[0].area
+    self.use_picks = use_picks
+
+    if self.use_picks:
+      self.area = picks_area(mask)
+      self.perimeter = picks_perimeter(mask)
+    else:
+      self.area = regionprops(label(mask))[0].area
+      self.perimeter = regionprops(label(mask))[0].perimeter
 
     if centroid:
       if (not isinstance(centroid, tuple)) or check_numbers(centroid):
@@ -51,8 +58,11 @@ class Plaque:
     """
     plq_bbox_area = (self.bbox[3] - self.bbox[1]) * (self.bbox[2]
     - self.bbox[0]) # assuming bbox = (minr, minc, maxr, maxc)
-    number_of_white_pix = np.sum(self.mask > 0)  # extracting non-white pixels
-    plq_area = number_of_white_pix
+
+    if self.use_picks:
+      plq_area = self.area
+    else:
+      plq_area = np.sum(self.mask > 0)  # extracting non-white pixels
 
     return plq_bbox_area, plq_area
 
@@ -104,9 +114,19 @@ class Plaque:
     _Arguments_:
     """
     _, plq_area = self.measure()
-    point1 = np.array((self.bbox[3],self.bbox[2]))
-    point2 = np.array(((self.bbox[3]+self.bbox[1])/2,(self.bbox[2]+self.bbox[0])/2))
-    radius = np.linalg.norm(point1 - point2)
-    perimeter = 2 * np.pi * radius
-    roundness = 4 * np.pi * plq_area / ( perimeter ** 2 )
+
+    if self.use_picks:
+      if self.perimeter != 0:
+        roundness = 4 * np.pi * plq_area / (self.perimeter ** 2 )
+      else:
+        roundness = 0
+    else:
+      point1 = np.array((self.bbox[3],self.bbox[2])) #top right corner
+      point2 = np.array(((self.bbox[3]+self.bbox[1])/2,(self.bbox[2]+self.bbox[0])/2)) #centre
+      radius = np.linalg.norm(point1 - point2) #distance between top right corner and centre
+      perimeter = 2 * np.pi * radius
+      if perimeter != 0:
+        roundness = 4 * np.pi * plq_area / ( perimeter ** 2 )
+      else:
+        roundness = 0
     return roundness

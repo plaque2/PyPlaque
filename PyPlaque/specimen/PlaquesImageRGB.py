@@ -20,7 +20,7 @@ class PlaquesImageRGB(PlaquesMask):
   plaques_mask - (np.array, required) numpy array containing binary mask of all
   virological plaque objects.
   """
-  def __init__(self, name, image, plaques_mask):
+  def __init__(self, name, image, plaques_mask, use_picks=True):
     # check types
     if not isinstance(name, str):
       raise TypeError("Image name atribute must be a str")
@@ -30,5 +30,5 @@ class PlaquesImageRGB(PlaquesMask):
     == 2):
       raise TypeError("Mask atribute must be a 2D numpy array")
 
-    super(PlaquesImageRGB, self).__init__(name, plaques_mask)
+    super(PlaquesImageRGB, self).__init__(name, plaques_mask,use_picks)
     self.image = image

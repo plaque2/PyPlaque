@@ -35,9 +35,9 @@ class PlaquesWell:
     self.well_image = well_image
     self.well_mask = well_mask
 
-  def get_image(self):
+  def get_masked_image(self):
     """
-    **get_image method** returns masked image of the well.
+    **get_masked_image method** returns masked image of the well.
     """
 
     return self.well_image ** self.well_mask
