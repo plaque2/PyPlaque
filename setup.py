@@ -27,12 +27,12 @@ setup(
   url = 'https://github.com/plaque2/PyPlaque',
   download_url = 'https://github.com/plaque2/PyPlaque/archive/{}.tar.gz' \
             .format(version),
-  scripts=['PyPlaque/experiment/experimentCVP.py',
-            'PyPlaque/experiment/experimentFP.py',
-            'PyPlaque/phenotypes/CrystalVioletPlaque.py',
-            'PyPlaque/phenotypes/FluorescencePlaque.py',
-            'PyPlaque/specimen/PlaquesImageGray.py',
-            'PyPlaque/specimen/PlaquesImageRGB.py'],
+  scripts=['PyPlaque/experiment/experiment_crystal_violet_plaque.py',
+            'PyPlaque/experiment/experiment_fluorescence_plaque.py',
+            'PyPlaque/phenotypes/crystal_violet_plaque.py',
+            'PyPlaque/phenotypes/fluorescence_plaque.py',
+            'PyPlaque/specimen/plaques_image_gray.py',
+            'PyPlaque/specimen/plaques_image_rgb.py'],
   keywords = ['Virus', 'Plaque', 'Virology', 'Microscopy', 'Computer vision'],
   install_requires=[
           'scikit-image>=0.24.0',

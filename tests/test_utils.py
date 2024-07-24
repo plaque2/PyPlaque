@@ -20,7 +20,7 @@ def test_utils_remove_artifacts(utils_remove_artifacts_input,
   remove_artifacts(*utils_remove_artifacts_input)).all
 
 @pytest.fixture()
-def inputImage():
+def input_image():
   return np.array([[0, 0, 0, 0, 0],
                     [0, 0, 1, 0, 0],
                     [0, 1, 4, 1, 0],
@@ -28,7 +28,7 @@ def inputImage():
                     [0, 0, 0, 0, 0]])
 
 @pytest.fixture()
-def expected_finalPlqRegImage():
+def expected_final_plq_reg_image():
     return np.array([[0, 0, 0, 0, 0],
                     [0, 0, 1, 0, 0],
                     [0, 1, 1, 1, 0],
@@ -36,7 +36,7 @@ def expected_finalPlqRegImage():
                     [0, 0, 0, 0, 0]])
 
 @pytest.fixture()
-def expected_globalPeakCoords():
+def expected_global_peak_coords():
   return np.array([[2, 2]])
 
 @pytest.fixture()
@@ -54,17 +54,19 @@ def virus_params():
 
 def test_centroid():
     # Test with a valid 2D numpy array
-    arr = np.array([[1, 2], [3, 4], [5, 6]])
+    ARR = np.array([[1, 2], [3, 4], [5, 6]])
 
     # Average of x values is (1+3+5)/3 = 3, average of y values is (2+4+6)/3 = 4
-    expected_x, expected_y = 3, 4  
+    EXPECTED_X, EXPECTED_Y = 3, 4  
     
-    result = centroid(arr)
+    result = centroid(ARR)
     
     assert np.isclose(result[0], 
-                      expected_x), f"X coordinate {result[0]} does not match the expected value {expected_x}"
+                      EXPECTED_X), f"X coordinate {result[0]} does not match \
+                      the expected value {EXPECTED_X}"
     assert np.isclose(result[1], 
-                      expected_y), f"Y coordinate {result[1]} does not match the expected value {expected_y}"
+                      EXPECTED_Y), f"Y coordinate {result[1]} does not match \
+                      the expected value {EXPECTED_Y}"
     
     # Test with an invalid array (should raise ValueError)
     # ToDo: centroid should be updated to handle this case
@@ -75,77 +77,77 @@ def test_centroid():
 
 def test_check_numbers():
     # Test with a valid tuple of integers and floats, both are OK
-    tup_valid = (1, 2.0, 3)
-    assert check_numbers(tup_valid) is False, "Tuple should contain only integers or floats"
+    TUP_VALID = (1, 2.0, 3)
+    assert check_numbers(TUP_VALID) is False, "Tuple should contain only integers or floats"
     
     # Test with an invalid tuple containing non-numeric types
-    tup_invalid = (1, 'a', 3)
-    assert check_numbers(tup_invalid) is False, "Tuple should not contain string values"
+    TUP_INVALID = (1, 'a', 3)
+    assert check_numbers(TUP_INVALID) is False, "Tuple should not contain string values"
     
     # Test with an empty tuple
-    tup_empty = ()
-    assert check_numbers(tup_empty) is True, "Empty tuple should be considered valid"
+    TUP_EMPTY = ()
+    assert check_numbers(TUP_EMPTY) is True, "Empty tuple should be considered valid"
 
 def test_fixed_threshold():
     # Create a sample image (5x5 array with random values between 0 and 1)
     np.random.seed(0)
-    img = np.random.rand(5, 5)
+    IMG = np.random.rand(5, 5)
     
     # Define threshold value and sigma for Gaussian filter
-    thr = 0.5
-    s = 1.0
+    THR = 0.5
+    S = 1.0
     
     # Call the function
-    result = fixed_threshold(img, thr, s)
+    result = fixed_threshold(IMG, THR, S)
     
     # Apply the same logic manually to compare results
-    filtered_img = filters.gaussian(img, sigma=s)
+    filtered_img = filters.gaussian(IMG, sigma=S)
     expected_result = np.zeros_like(filtered_img)
-    expected_result[filtered_img > thr] = 1
+    expected_result[filtered_img > THR] = 1
     
     # Assert that the result matches the expected outcome
     assert np.array_equal(result, 
                           expected_result), "Thresholding result does not match the expected output"
 
-def test_get_plaque_mask(inputImage,
-                          expected_finalPlqRegImage,
-                          expected_globalPeakCoords,
+def test_get_plaque_mask(input_image,
+                          expected_final_plq_reg_image,
+                          expected_global_peak_coords,
                           virus_params):
   # Call the function
-  finalPlqRegImage, globalPeakCoords = get_plaque_mask(inputImage, virus_params)
+  final_plq_reg_image, global_peak_coords = get_plaque_mask(input_image, virus_params)
 
   # Perform assertions
-  assert np.array_equal(finalPlqRegImage, expected_finalPlqRegImage)
-  assert np.array_equal(globalPeakCoords, expected_globalPeakCoords)
+  assert np.array_equal(final_plq_reg_image, expected_final_plq_reg_image)
+  assert np.array_equal(global_peak_coords, expected_global_peak_coords)
 
 def test_remove_artifacts():
     # Create a sample image with random values and an artifact threshold
-    img = np.random.randint(0, 256, size=(10, 10))
-    artifact_threshold = 127
+    IMG = np.random.randint(0, 256, size=(10, 10))
+    ARTIFACT_THRESHOLD = 127
     
     # Call the function
-    result = remove_artifacts(img, artifact_threshold)
+    result = remove_artifacts(IMG, ARTIFACT_THRESHOLD)
     
     # Assert that pixels above the threshold are set to zero
-    assert np.all(result[img > artifact_threshold] == 0), "Artifacts were not removed correctly"
+    assert np.all(result[IMG > ARTIFACT_THRESHOLD] == 0), "Artifacts were not removed correctly"
 
 def test_remove_background():
     # Create a sample image (5x5 array with random values)
-    img = np.random.randint(0, 65535, size=(5, 5), dtype=np.uint16)
+    IMG = np.random.randint(0, 65535, size=(5, 5), dtype=np.uint16)
     
     # Define a radius for the morphological operation
-    radius = 2
+    RADIUS = 2
     
     # Call the function
-    background, foreground = remove_background(img, radius)
+    background, foreground = remove_background(IMG, RADIUS)
     
     # Assert shapes are correct
-    assert background.shape == img.shape, "Background shape is incorrect"
-    assert foreground.shape == img.shape, "Foreground shape is incorrect"
+    assert background.shape == IMG.shape, "Background shape is incorrect"
+    assert foreground.shape == IMG.shape, "Foreground shape is incorrect"
     
     # Assert pixel values are non-negative (foreground should not have negative values)
     assert np.all(foreground >= 0), "Foreground has negative values"
     
     # Add assertion to check that the background is correctly subtracted
-    assert np.allclose(img, background + foreground), "Background subtraction is incorrect"
+    assert np.allclose(IMG, background + foreground), "Background subtraction is incorrect"
 

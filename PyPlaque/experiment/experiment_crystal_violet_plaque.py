@@ -96,9 +96,11 @@ class ExperimentCrystalVioletPlaque:
     if not whole_plate:
       if folder_pattern:
         self.plate_indiv_dir = [file for file in os.listdir(self.plate_folder)
-        if (os.path.isdir(os.path.join(self.plate_folder, file)) and (len(re.findall(folder_pattern,file))>=1))]
+        if (os.path.isdir(os.path.join(self.plate_folder, file)) and 
+                                                      (len(re.findall(folder_pattern,file))>=1))]
         self.plate_mask_indiv_dir = [file for file in os.listdir(self.plate_mask_folder)
-        if (os.path.isdir(os.path.join(self.plate_mask_folder, file)) and (len(re.findall(folder_pattern,file))>=1))] 
+        if (os.path.isdir(os.path.join(self.plate_mask_folder, file)) and 
+                                                      (len(re.findall(folder_pattern,file))>=1))] 
       else:
         self.plate_indiv_dir = [file for file in os.listdir(self.plate_folder)
             if os.path.isdir(os.path.join(self.plate_folder, file))]
@@ -266,23 +268,27 @@ class ExperimentCrystalVioletPlaque:
       mask_path = Path(self.plate_mask_folder) / (d)
 
     if file_pattern:
-      image_files = [f for f in tqdm(image_path.glob(ext)) if len(re.findall(file_pattern,f.stem))>=1]
+      image_files = [f for f in tqdm(image_path.glob(ext)) 
+                                                    if len(re.findall(file_pattern,f.stem))>=1]
     else:
       image_files = list(tqdm(image_path.glob(ext)))
     image_files = sorted(image_files)
     if all_grayscale:
-      img_list = [np.asarray(self.read_from_path(f,color_mode="grayscale")) for f in tqdm(image_files)]
+      img_list = [np.asarray(self.read_from_path(f,color_mode="grayscale")) 
+                                                    for f in tqdm(image_files)]
     else:
       img_list = [self.read_from_path(f) for f in tqdm(image_files)]
 
     if read_mask:
       if file_pattern:
-        mask_files = [f for f in tqdm(mask_path.glob(ext)) if len(re.findall(file_pattern,f.stem))>=1]
+        mask_files = [f for f in tqdm(mask_path.glob(ext)) 
+                                                    if len(re.findall(file_pattern,f.stem))>=1]
       else:
         mask_files = list(tqdm(mask_path.glob(ext)))
       mask_files = sorted(mask_files)
       if all_grayscale:
-        mask_list = [np.asarray(self.read_from_path(f,color_mode="grayscale")) for f in tqdm(mask_files)]
+        mask_list = [np.asarray(self.read_from_path(f,color_mode="grayscale")) 
+                                                    for f in tqdm(mask_files)]
       else:
         mask_list = [self.read_from_path(f,color_mode="grayscale") for f in tqdm(mask_files)]
     else:
@@ -292,7 +298,9 @@ class ExperimentCrystalVioletPlaque:
                                 gain=self.params['crystal_violet']['gain']) 
                             for img in tqdm(img_list)]
 
-      mask_list = [PlaquesImageGray(self.plate_indiv_dir[plate_id]+"-"+str(i//self.params['crystal_violet']['ncols'])+","+str(i%self.params['crystal_violet']['ncols']),
+      mask_list = [PlaquesImageGray(self.plate_indiv_dir[plate_id]+"-"+
+                                    str(i//self.params['crystal_violet']['ncols'])+","+
+                                    str(i%self.params['crystal_violet']['ncols']),
                                 img_gadjusted_list[i],
                                 threshold=self.params['crystal_violet']['threshold'],
                                 sigma=self.params['crystal_violet']['sigma']).plaques_mask
@@ -324,8 +332,10 @@ class ExperimentCrystalVioletPlaque:
       mask_path = Path(self.plate_mask_folder)
 
     if file_pattern:
-      image_files = [f for f in tqdm(image_path.glob(ext)) if len(re.findall(file_pattern,f.stem))>=1]
-      mask_files = [f for f in tqdm(mask_path.glob(ext)) if len(re.findall(file_pattern,f.stem))>=1]
+      image_files = [f for f in tqdm(image_path.glob(ext)) 
+                                                  if len(re.findall(file_pattern,f.stem))>=1]
+      mask_files = [f for f in tqdm(mask_path.glob(ext)) 
+                                                  if len(re.findall(file_pattern,f.stem))>=1]
     else:
       image_files = list(tqdm(image_path.glob(ext)))
       mask_files = list(tqdm(mask_path.glob(ext)))
@@ -342,8 +352,10 @@ class ExperimentCrystalVioletPlaque:
       self.full_plate_dict[f.stem]['image_name'] = {}
 
     if all_grayscale:
-      img_list = [np.asarray(self.read_from_path(f,color_mode="grayscale")) for f in tqdm(image_files)]
-      mask_list = [np.asarray(self.read_from_path(f,color_mode="grayscale")) for f in tqdm(mask_files)]
+      img_list = [np.asarray(self.read_from_path(f,color_mode="grayscale")) 
+                                                                      for f in tqdm(image_files)]
+      mask_list = [np.asarray(self.read_from_path(f,color_mode="grayscale")) 
+                                                                      for f in tqdm(mask_files)]
     else:
       img_list = [self.read_from_path(f) for f in tqdm(image_files)]
       mask_list = [self.read_from_path(f,color_mode="grayscale") for f in tqdm(mask_files)]
@@ -359,7 +371,8 @@ class ExperimentCrystalVioletPlaque:
     plaques_well_list = [PlaquesWell(row = 0,
                               column = 0,
                               well_image = self.full_plate_dict[d]['img'],
-                              well_mask = self.full_plate_dict[d]['mask']) for d in tqdm(self.full_plate_dict.keys())]
+                              well_mask = self.full_plate_dict[d]['mask']) 
+                              for d in tqdm(self.full_plate_dict.keys())]
     masked_img_list = [plq_well.get_masked_image() for plq_well in tqdm(plaques_well_list)]
     for i,d in tqdm(enumerate(self.full_plate_dict.keys())):
       self.full_plate_dict[d]['masked_img'] = masked_img_list[i]
@@ -369,17 +382,21 @@ class ExperimentCrystalVioletPlaque:
   def extract_masked_wells(self,plate_id,row_pattern=None,col_pattern=None):
     d= self.plate_indiv_dir[plate_id]
     if row_pattern and col_pattern:
-      plaques_well_list = [PlaquesWell(row = re.findall(row_pattern, str(self.well_dict[d]['image_name'][i]))[0],
-                                  column = re.findall(col_pattern, str(self.well_dict[d]['image_name'][i]))[0],
+      plaques_well_list = [PlaquesWell(row = re.findall(row_pattern, 
+                                      str(self.well_dict[d]['image_name'][i]))[0],
+                                  column = re.findall(col_pattern, 
+                                      str(self.well_dict[d]['image_name'][i]))[0],
                                   well_image = self.well_dict[d]['img'][i],
-                                  well_mask = self.well_dict[d]['mask'][i]) for i in tqdm(range(len(self.well_dict[d]['img'])))]
+                                  well_mask = self.well_dict[d]['mask'][i]) 
+                                  for i in tqdm(range(len(self.well_dict[d]['img'])))]
       masked_img_list = [plq_well.get_masked_image() for plq_well in tqdm(plaques_well_list)]
       self.well_dict[d]['masked_img'] = masked_img_list
     else:
       plaques_well_list = [PlaquesWell(row = i//self.params['crystal_violet']['ncols'],
                               column = i%self.params['crystal_violet']['ncols'],
                               well_image = self.well_dict[d]['img'][i],
-                              well_mask = self.well_dict[d]['mask'][i]) for i in tqdm(range(len(self.well_dict[d]['img'])))]
+                              well_mask = self.well_dict[d]['mask'][i]) 
+                              for i in tqdm(range(len(self.well_dict[d]['img'])))]
       masked_img_list = [plq_well.get_masked_image() for plq_well in tqdm(plaques_well_list)]
       self.well_dict[d]['masked_img'] = masked_img_list
 

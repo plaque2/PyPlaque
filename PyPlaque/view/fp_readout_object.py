@@ -97,14 +97,16 @@ class PlaqueObjectReadout:
     
     def eccentricity(self):
         """
-        **eccentricity method** returns for an individual plaque object,the eccentricity of the plaque which is
-        found by fitting an ellipse to the plaque boundary and finding the eccentricity given by sqrt(1-(b^2/a^2))
-        where b is the length of the semi-minor axis and a is the length of the semi-major axis
+        **eccentricity method** returns for an individual plaque object,the eccentricity of 
+        the plaque which is found by fitting an ellipse to the plaque boundary and finding the 
+        eccentricity given by sqrt(1-(b^2/a^2)) where b is the length of the semi-minor axis and 
+        a is the length of the semi-major axis
 
         _Arguments_:
         """
         # find the contours
-        contours,_ = cv2.findContours(self.plaque_object_properties.image.astype(np.uint8).copy(), cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+        contours,_ = cv2.findContours(self.plaque_object_properties.image.astype(np.uint8).copy(), 
+                                                            cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 
         ecc = 0
         # select the first contour that has more than 5 points and fit an ellipse based on that
@@ -162,27 +164,29 @@ class PlaqueObjectReadout:
             
         return roundness 
 
+    def get_roundness(self):
+        return self.roundness()
     
     def get_number_of_peaks(self):
         #fine detection 
         if self.params['fine_plaque_detection_flag']:
-            globalPeakCoords=[]
+            global_peak_coords=[]
             (x1,y1,_,_) = self.plaque_object_properties.bbox
-            curPlqRegion= self.plaque_object * self.plaque_object_properties.image
+            cur_plq_region= self.plaque_object * self.plaque_object_properties.image
             
             
-            blurredImage = skimage.filters.gaussian(curPlqRegion, 
-                                                    sigma=self.params['plaque_gaussian_filter_sigma'],
-                                                    truncate = self.params['plaque_gaussian_filter_size']/
-                                                        self.params['plaque_gaussian_filter_sigma'] )
+            blurred_image = skimage.filters.gaussian(cur_plq_region, 
+                                            sigma=self.params['plaque_gaussian_filter_sigma'],
+                                            truncate = self.params['plaque_gaussian_filter_size']/
+                                                self.params['plaque_gaussian_filter_sigma'] )
             
-            coordinates = skimage.feature.peak_local_max(blurredImage, 
-                                                        min_distance=self.params['peak_region_size'],
-                                                        exclude_border = False)
+            coordinates = skimage.feature.peak_local_max(blurred_image, 
+                                                    min_distance=self.params['peak_region_size'],
+                                                    exclude_border = False)
 
-            globalPeakCoords = np.array([coordinates[:, 0] + x1, coordinates[:, 1] + y1]).T
+            global_peak_coords = np.array([coordinates[:, 0] + x1, coordinates[:, 1] + y1]).T
             
-            return globalPeakCoords
+            return global_peak_coords
         else:
             return None
     

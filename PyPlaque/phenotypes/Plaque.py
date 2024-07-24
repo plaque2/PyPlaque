@@ -68,9 +68,10 @@ class Plaque:
 
   def eccentricity(self):
     """
-    **eccentricity method** returns for an individual plaque object,the eccentricity of the plaque which is
-    found by fitting an ellipse to the plaque boundary and finding the eccentricity given by sqrt(1-(b^2/a^2))
-    where b is the length of the semi-minor axis and a is the length of the semi-major axis
+    **eccentricity method** returns for an individual plaque object,the eccentricity of the 
+    plaque which is found by fitting an ellipse to the plaque boundary and finding the eccentricity 
+    given by sqrt(1-(b^2/a^2)) where b is the length of the semi-minor axis and a is the length of 
+    the semi-major axis.
 
     _Arguments_:
     """
@@ -107,9 +108,9 @@ class Plaque:
 
   def roundness(self):
     """
-    **roundness method** returns for an individual plaque object,the roundness of the plaque which is
-    found by the following ratio given by 4 * pi * Area / ( Perimeter^2 ) where Area is 4 * pi * radius^2
-    and Perimeter is 2 * pi * radius.
+    **roundness method** returns for an individual plaque object,the roundness of the plaque 
+    which is found by the following ratio given by 4 * pi * Area / ( Perimeter^2 ) where 
+    Area is 4 * pi * radius^2 and Perimeter is 2 * pi * radius.
 
     _Arguments_:
     """

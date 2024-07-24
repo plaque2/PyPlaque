@@ -7,101 +7,102 @@ from skimage import measure
 from PyPlaque.utils import remove_background, picks_area
 
 
-def getAllPlaqueRegions(image,threshold,plqConnect):
-    BW =  image > threshold
-    distance = ndi.distance_transform_edt(~BW)
-    BW2 = distance <= plqConnect
+def get_all_plaque_regions(image,threshold,plq_connect):
+    bw =  image > threshold
+    distance = ndi.distance_transform_edt(~bw)
+    bw2 = distance <= plq_connect
      # Label connected regions
-    labelImage = measure.label(BW2)
+    label_image = measure.label(bw2)
     # Remove elements from the label matrix which were not present in the original binary image
-    labelImage[~BW] = 0
+    label_image[~bw] = 0
 
-    return labelImage
+    return label_image
 
 
-def get_plaque_mask(inputImage,virus_params):
-    labelImage =  getAllPlaqueRegions(inputImage,
+def get_plaque_mask(input_image,virus_params):
+    label_image =  get_all_plaque_regions(input_image,
                               virus_params['virus_threshold'],
                               virus_params['plaque_connectivity'])
 
 
     # Calculate various region properties of the image
-    props = measure.regionprops(labelImage)
+    props = measure.regionprops(label_image)
 
-    # Filter out objects with area smaller than minPlaqueArea or larger than maxPlaqueArea
-    plaqueRegionProperties = []
+    # Filter out objects with area smaller than min_plaque_area or larger than max_plaque_area
+    plaque_region_properties = []
     for prop in props:
         if virus_params['use_picks']:
             temp_area = picks_area(prop.image)
         else:
             temp_area = prop.area
         if  virus_params['min_plaque_area'] < temp_area:
-            plaqueRegionProperties.append(prop)
+            plaque_region_properties.append(prop)
 
-    bBoxes = []
-    bwPlqRegions = []
-    cropPlqRegions = []
-    globalPeakCoords=[]
-    peakCounts = []
+    bboxes = []
+    bw_plq_regions = []
+    crop_plq_regions = []
+    global_peak_coords=[]
+    peak_counts = []
 
 
     labels = []
-    finalPlqRegImage =np.zeros_like(labelImage) #this contains the final BW image of all plaque regions
+    final_plq_reg_image =np.zeros_like(label_image) 
+    #this contains the final bw image of all plaque regions
 
     #fine detection
     if virus_params['fine_plaque_detection_flag']:
-        for idx,region in enumerate(plaqueRegionProperties):
+        for idx,region in enumerate(plaque_region_properties):
             (x1,y1,x2,y2) = region.bbox
-            bBoxes.append(region.bbox)
+            bboxes.append(region.bbox)
 
-            bwPlqRegions.append(region.image)
-            curPlqRegion=inputImage[x1:x2,y1:y2]*region.image
-            cropPlqRegions.append(curPlqRegion)
+            bw_plq_regions.append(region.image)
+            cur_plq_region=input_image[x1:x2,y1:y2]*region.image
+            crop_plq_regions.append(cur_plq_region)
             labels.append(idx+1)
 
             for coord in region.coords:
-                finalPlqRegImage[coord[0], coord[1]] = 1
+                final_plq_reg_image[coord[0], coord[1]] = 1
 
-            blurredImage = skimage.filters.gaussian(
-                                                curPlqRegion,
-                                                sigma=virus_params['plaque_gaussian_filter_sigma'],
-                                                truncate = virus_params['plaque_gaussian_filter_size']/
-                                                        virus_params['plaque_gaussian_filter_sigma'])
+            blurred_image = skimage.filters.gaussian(
+                                            cur_plq_region,
+                                            sigma=virus_params['plaque_gaussian_filter_sigma'],
+                                            truncate = virus_params['plaque_gaussian_filter_size']/
+                                                    virus_params['plaque_gaussian_filter_sigma'])
 
-            coordinates = skimage.feature.peak_local_max(blurredImage,
-                                                        min_distance=virus_params['peak_region_size'],
-                                                        exclude_border = False)
-            peakCounts.append(len(coordinates))
+            coordinates = skimage.feature.peak_local_max(blurred_image,
+                                                    min_distance=virus_params['peak_region_size'],
+                                                    exclude_border = False)
+            peak_counts.append(len(coordinates))
             if idx == 0:
-                globalPeakCoords = np.array([coordinates[:, 0] + x1, coordinates[:, 1] + y1]).T
+                global_peak_coords = np.array([coordinates[:, 0] + x1, coordinates[:, 1] + y1]).T
             else:
-                globalPeakCoords = np.vstack((globalPeakCoords, np.array([coordinates[:, 0] + x1,
-                                                                        coordinates[:, 1] + y1]).T))
+                global_peak_coords = np.vstack((global_peak_coords, np.array([coordinates[:, 0] + 
+                                                                x1, coordinates[:, 1] + y1]).T))
 
-        return finalPlqRegImage, globalPeakCoords
+        return final_plq_reg_image, global_peak_coords
     else:
-        return finalPlqRegImage, None
+        return final_plq_reg_image, None
 
 
-def plot_virus_contours(inputImage,virus_params,save_path=None):
-    _, bg_removed_img = remove_background(inputImage,
+def plot_virus_contours(input_image,virus_params,save_path=None):
+    _, bg_removed_img = remove_background(input_image,
                                   radius=virus_params['correction_ball_radius'])
-    finalPlqRegImage, globalPeakCoords = get_plaque_mask(inputImage,virus_params)
+    final_plq_reg_image, global_peak_coords = get_plaque_mask(input_image,virus_params)
     _, ax = plt.subplots(figsize=(8, 8))
 
-    # Display inputImage with custom colormap and intensity range
-    ax.imshow(bg_removed_img, cmap=plt.get_cmap('gray'), vmin=500, vmax=6000, alpha=1, extent=[0, inputImage.shape[1], 
-                                                                                inputImage.shape[0], 0])
-    # ax.imshow(finalPlqRegImage, cmap=plt.cm.gray)
+    # Display input_image with custom colormap and intensity range
+    ax.imshow(bg_removed_img, cmap=plt.get_cmap('gray'), vmin=500, vmax=6000, alpha=1, 
+    extent=[0, input_image.shape[1],input_image.shape[0], 0])
+    # ax.imshow(final_plq_reg_image, cmap=plt.cm.gray)
 
-    # Find contours in finalPlqRegImage
-    contours = measure.find_contours(finalPlqRegImage)
+    # Find contours in final_plq_reg_image
+    contours = measure.find_contours(final_plq_reg_image)
 
     # Plot contours with random colors
     for contour in contours:
         ax.plot(contour[:, 1], contour[:, 0], linewidth=2,color='yellow')
 
-    ax.plot(globalPeakCoords[:, 1], globalPeakCoords[:, 0], 'r.', markersize=15)
+    ax.plot(global_peak_coords[:, 1], global_peak_coords[:, 0], 'r.', markersize=15)
     ax.axis('off')
     ax.set_title('Peak local max with contours')
     if save_path:

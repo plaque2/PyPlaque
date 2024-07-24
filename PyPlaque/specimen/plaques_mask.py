@@ -4,7 +4,7 @@ from matplotlib.patches import Circle
 from skimage.measure import label, regionprops
 from skimage.segmentation import clear_border
 
-from PyPlaque.phenotypes.Plaque import Plaque
+from PyPlaque.phenotypes import Plaque
 from PyPlaque.utils import centroid, picks_area
 
 
@@ -148,11 +148,11 @@ class PlaquesMask:
     self.measure_dict['centroid'][1]))
     # Now, loop through coord arrays, and create a circle at each x,y pair
     for plq in self.plaques_list:
-      point1 = np.array((plq.bbox[3],plq.bbox[2]))
-      point2 = np.array(((plq.bbox[3]+plq.bbox[1])/2,
-      (plq.bbox[2]+plq.bbox[0])/2))
-      circ = Circle(((plq.bbox[3]+plq.bbox[1])/2,
-      (plq.bbox[2]+plq.bbox[0])/2),np.linalg.norm(point1 - point2),
+      point1 = np.array((plq.bbox[3], plq.bbox[2]))
+      point2 = np.array(((plq.bbox[3] + plq.bbox[1])/2,
+      (plq.bbox[2] + plq.bbox[0])/2))
+      circ = Circle(((plq.bbox[3] + plq.bbox[1])/2,
+      (plq.bbox[2]+plq.bbox[0])/2), np.linalg.norm(point1 - point2),
       fill = False, color = 'white')
       if np.linalg.norm(point1-point2) > max_margin :
         # measuring the max distance of plaque centre from their bbox corner
@@ -167,14 +167,14 @@ class PlaquesMask:
     # so that a circle can be drawn around the cluster of plaques
     if self.measure_dict['centroid'][0]:
       main_circle = Circle((self.measure_dict['centroid'][0],
-      self.measure_dict['centroid'][1]),radius+max_margin,
-      fill = False, color = 'white')
+                            self.measure_dict['centroid'][1]), radius+max_margin,
+                            fill = False, color = 'white')
       ax.add_patch(main_circle)
 
     plt.title(str(i)+","+str(j))
     plt.tight_layout()
     if save_path:
-        plt.savefig(save_path,bbox_inches='tight', dpi=300)
+        plt.savefig(save_path, bbox_inches='tight', dpi=300)
     # Show the image
     plt.show()
 

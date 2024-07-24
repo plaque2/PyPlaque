@@ -159,9 +159,10 @@ class PlateImage:
 
     well_dict = self.get_well_positions()
 
+    PAD = 50
     for _,v in well_dict.items():
-      rect = mpatches.Rectangle((v['minc']-50,v['minr']-50), (v['maxc']+50) -
-      (v['minc']-50),(v['maxr']+50) - (v['minr']-50),fill=False,
+      rect = mpatches.Rectangle((v['minc']-PAD,v['minr']-PAD), (v['maxc']+PAD) -
+      (v['minc']-PAD),(v['maxr']+PAD) - (v['minr']-PAD),fill=False,
       edgecolor='white', linewidth=2)
       ax.add_patch(rect)
 

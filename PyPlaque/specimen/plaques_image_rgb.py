@@ -1,6 +1,6 @@
 import numpy as np
 
-from PyPlaque.specimen.PlaquesMask import PlaquesMask
+from PyPlaque.specimen import PlaquesMask
 
 
 class PlaquesImageRGB(PlaquesMask):

@@ -89,9 +89,12 @@ class ExperimentFluorescencePlaque:
                 'image_bits': 16
         }
       }
-    params['nuclei']['manual_threshold'] = params['nuclei']['raw_manualThreshold']*(2**params['nuclei']['image_bits']-1)
-    params['nuclei']['artifact_threshold'] = params['nuclei']['raw_artifactThreshold']*(2**params['nuclei']['image_bits']-1)
-    params['virus']['virus_threshold'] = params['virus']['raw_virusThreshold']*(2**params['virus']['image_bits']-1)
+    params['nuclei']['manual_threshold'] = params['nuclei']['raw_manualThreshold'] \
+                                                            *(2**params['nuclei']['image_bits']-1)
+    params['nuclei']['artifact_threshold'] = params['nuclei']['raw_artifactThreshold'] \
+                                                            *(2**params['nuclei']['image_bits']-1)
+    params['virus']['virus_threshold'] = params['virus']['raw_virusThreshold'] \
+                                                            *(2**params['virus']['image_bits']-1)
     self.params = params
     self.plate_indiv_dir = []
     self.plate_mask_indiv_dir = []
@@ -120,9 +123,11 @@ class ExperimentFluorescencePlaque:
 
     if folder_pattern:
       self.plate_indiv_dir = [file for file in os.listdir(self.plate_folder)
-      if (os.path.isdir(os.path.join(self.plate_folder, file)) and (len(re.findall(folder_pattern,file))>=1))]
+      if (os.path.isdir(os.path.join(self.plate_folder, file)) and 
+                                                        (len(re.findall(folder_pattern,file))>=1))]
       self.plate_mask_indiv_dir = [file for file in os.listdir(self.plate_mask_folder)
-      if (os.path.isdir(os.path.join(self.plate_mask_folder, file)) and (len(re.findall(folder_pattern,file))>=1))] 
+      if (os.path.isdir(os.path.join(self.plate_mask_folder, file)) and 
+                                                        (len(re.findall(folder_pattern,file))>=1))] 
     else:
       self.plate_indiv_dir = [file for file in os.listdir(self.plate_folder)
       if os.path.isdir(os.path.join(self.plate_folder, file))]
@@ -158,7 +163,8 @@ class ExperimentFluorescencePlaque:
       image_path = Path(self.plate_folder) / (d)
 
     if file_pattern:
-      image_files_w2 = [f for f in tqdm(image_path.glob(ext)) if len(re.findall(file_pattern,f.stem))>=1]
+      image_files_w2 = [f for f in tqdm(image_path.glob(ext)) 
+                                                  if len(re.findall(file_pattern,f.stem))>=1]
     else:
       image_files_w2 = [f for f in tqdm(image_path.glob(ext))]
     image_files_w2 = sorted(image_files_w2)
@@ -190,7 +196,8 @@ class ExperimentFluorescencePlaque:
       image_path = Path(self.plate_folder) / (d)
 
     if file_pattern:
-      image_files_w1 = [f for f in tqdm(image_path.glob(ext)) if len(re.findall(file_pattern,f.stem))>=1]
+      image_files_w1 = [f for f in tqdm(image_path.glob(ext)) 
+                                                      if len(re.findall(file_pattern,f.stem))>=1]
     else:
       image_files_w1 = [f for f in tqdm(image_path.glob(ext))]
     image_files_w1 = sorted(image_files_w1)
@@ -198,15 +205,18 @@ class ExperimentFluorescencePlaque:
     img_list_w1 = [TIFF.imread(f) for f in tqdm(image_files_w1)]    
 
     artifact_removed_img_list_w1 = map(functools.partial(remove_artifacts,artifact_threshold=
-                                    self.params['nuclei']['artifact_threshold']),  tqdm(img_list_w1))
+                                    self.params['nuclei']['artifact_threshold']), tqdm(img_list_w1))
     bg_removed_img_list_w1 = map(functools.partial(remove_background,
-                            radius=self.params['nuclei']['correction_ball_radius']), tqdm(artifact_removed_img_list_w1))   
+                            radius=self.params['nuclei']['correction_ball_radius']), 
+                            tqdm(artifact_removed_img_list_w1))   
     bg_removed_img_list_w1 = [b[1] for b in tqdm(bg_removed_img_list_w1)]
 
     def create_binary_img(bg_removed_img,thresh):
         return np.where(bg_removed_img > thresh,1,0)
 
-    binary_img_list_w1 = map(functools.partial(create_binary_img, thresh= self.params['nuclei']['manual_threshold']), bg_removed_img_list_w1)
+    binary_img_list_w1 = map(functools.partial(create_binary_img, 
+                                              thresh= self.params['nuclei']['manual_threshold']), 
+                                              bg_removed_img_list_w1)
 
     self.plate_dict_w1[d]['img'] = img_list_w1
     self.plate_dict_w1[d]['image_name'] = image_files_w1

@@ -1,6 +1,6 @@
 import numpy as np
 
-from PyPlaque.phenotypes.Plaque import Plaque
+from PyPlaque.phenotypes import Plaque
 from PyPlaque.utils import check_numbers
 
 

@@ -90,7 +90,8 @@ class WellImageReadout:
         if len(np.nonzero(self.nuclei_image*self.nuclei_mask)[0])==0:
             return 0
         else:
-            return np.mean(np.nonzero(self.nuclei_image.astype(np.float64))) #creating a masked image 
+            return np.mean(np.nonzero(self.nuclei_image.astype(np.float64))) 
+            #creating a masked image 
 
     def get_mean_plaque_intensity(self):
         if len(np.nonzero(self.plaque_image)[0])==0:
@@ -106,47 +107,48 @@ class WellImageReadout:
     
     def get_nuclei_count(self):
         nuclei_area_sum = np.sum(self.nuclei_mask)
-        return round(nuclei_area_sum/((self.params['min_cell_area'] + self.params['max_cell_area'])/2))
+        return round(nuclei_area_sum/((self.params['min_cell_area'] + 
+                                        self.params['max_cell_area'])/2))
     
     def get_plaque_count(self):
-        _ ,globalPeakCoords = get_plaque_mask(self.plaque_image,self.params)
-        if globalPeakCoords is None:
-            numberOfPlaques = 0
+        _ ,global_peak_coords = get_plaque_mask(self.plaque_image,self.params)
+        if global_peak_coords is None:
+            number_of_plaques = 0
         else:
-            numberOfPlaques = len(globalPeakCoords)
-        return numberOfPlaques
+            number_of_plaques = len(global_peak_coords)
+        return number_of_plaques
 
     def get_infected_nuclei_count(self):
-        labelImage = measure.label(self.plaque_mask)
-        labelImage[~self.plaque_mask] = 0
-        props = measure.regionprops(labelImage)
-        plaqueRegionProperties_area = 0
+        label_image = measure.label(self.plaque_mask)
+        label_image[~self.plaque_mask] = 0
+        props = measure.regionprops(label_image)
+        plaque_region_properties_area = 0
         for prop in props:
             if self.params['use_picks']:
                 plaque_area = picks_area(prop.image)
             else:
                 plaque_area = prop.area
             if  self.params['min_plaque_area'] < plaque_area:
-                plaqueRegionProperties_area += plaque_area
-        return round(plaqueRegionProperties_area/
+                plaque_region_properties_area += plaque_area
+        return round(plaque_region_properties_area/
                      ((self.params['min_cell_area'] + self.params['max_cell_area'])/2))
     
     def get_lesion_area(self):
         return np.sum(self.plaque_mask)
     
     def get_plaque_objects(self):
-        labelImage = measure.label(self.plaque_mask)
-        labelImage[~self.plaque_mask] = 0
-        props = measure.regionprops(labelImage)
-        plaqueRegionProperties = []
+        label_image = measure.label(self.plaque_mask)
+        label_image[~self.plaque_mask] = 0
+        props = measure.regionprops(label_image)
+        plaque_region_properties = []
         for prop in props:
             if self.params['use_picks']:
                 plaque_area = picks_area(prop.image)
             else:
                 plaque_area = prop.area
             if  self.params['min_plaque_area'] < plaque_area:
-                plaqueRegionProperties.append(prop)
-        return plaqueRegionProperties
+                plaque_region_properties.append(prop)
+        return plaque_region_properties
     
     def call_plaque_object_readout(self,plaque_object_properties, params):
         min_row, min_col, max_row, max_col = plaque_object_properties.bbox

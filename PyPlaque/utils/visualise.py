@@ -59,7 +59,8 @@ def boxplot_quants(plq_measures_df, col_name,return_stats = False,save_path=None
     for xtick in box_plot.get_xticks():
         for col in stats.columns:
             box_plot.text(xtick, stats[col][xtick], stats[col][xtick], horizontalalignment='left', 
-                          size='small', color='k', weight='semibold', bbox=dict(facecolor='lightgray'))
+                          size='small', color='k', weight='semibold', 
+                          bbox=dict(facecolor='lightgray'))
 
     plt.title(col_name)
     plt.tight_layout()
@@ -93,7 +94,8 @@ def create_grouped_bar_from_df(abs_df_img,abs_df_img_cont,col_name,normalize=Fal
 
     if normalize:
         scaler = MinMaxScaler()
-        combined_df['Values_scaled'] = scaler.fit_transform(combined_df['Values'].values.reshape(-1,1))
+        combined_df['Values_scaled'] = scaler.fit_transform(
+                                        combined_df['Values'].values.reshape(-1,1))
         combined_df.drop(['Values'],axis=1,inplace=True)
 
     barplot_quants(combined_df,save_path=save_path,normalize=normalize)
@@ -118,7 +120,8 @@ def compare_plaque_detection_from_image(i,j,true_count, mask, plaques_list,
     ax2.imshow(mask_gadjusted.plaques_mask,cmap='gray')
     rect_list = [mpatches.Rectangle((plq.bbox[1], plq.bbox[0]), plq.bbox[3] - plq.bbox[1], 
                                     plq.bbox[2] - plq.bbox[0],
-                            fill=False, edgecolor='red', linewidth=2) for plq in tqdm(plaques_list_gadjusted)]
+                            fill=False, edgecolor='red', linewidth=2) 
+                            for plq in tqdm(plaques_list_gadjusted)]
     _ = [ax2.add_patch(rect) for rect in tqdm(rect_list)]
     ax2.set_axis_off()
     ax2.set_title(str(i)+","+str(j)+" Gamma Adjusted")

@@ -20,9 +20,10 @@ def picks_area(image, neighbourhood=4):
     perimeter_weights[[21, 33]] = 1
     perimeter_weights[[13, 23]] = 0.125
 
-    perimeter_image = ndi.convolve(border_image, np.array([[10, 2, 10],
-                                                           [2, 1, 2],
-                                                           [10, 2, 10]]),
+    PERIMETER_KERNEL = np.array([[10, 2, 10],
+                                [2, 1, 2],
+                                [10, 2, 10]])
+    perimeter_image = ndi.convolve(border_image, PERIMETER_KERNEL,
                                    mode='constant', cval=0)
     perimeter_histogram = np.histogram(perimeter_image.ravel(), bins=50)
     total_perimeter = np.dot(perimeter_histogram[0], perimeter_weights)
@@ -56,9 +57,10 @@ def picks_perimeter(image, neighbourhood=4):
     perimeter_weights[[21, 33]] = np.sqrt(2)
     perimeter_weights[[13, 23]] = (1 + np.sqrt(2)) / 2
 
-    perimeter_image = ndi.convolve(border_image, np.array([[10, 2, 10],
-                                                           [2, 1, 2],
-                                                           [10, 2, 10]]),
+    PERIMETER_KERNEL = np.array([[10, 2, 10],
+                                [2, 1, 2],
+                                [10, 2, 10]])
+    perimeter_image = ndi.convolve(border_image, PERIMETER_KERNEL,
                                    mode='constant', cval=0)
     perimeter_histogram = np.histogram(perimeter_image.ravel(), bins=50)
     total_perimeter = np.dot(perimeter_histogram[0], perimeter_weights)
