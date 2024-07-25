@@ -25,22 +25,19 @@ if pil_image is not None:
 
 class ExperimentCrystalVioletPlaque:
   """
-	**Class ExperimentCrystalVioletPlaque** is aimed to contain metadata of
-	multiple instances of a full well of a multititre plate of Crystal Violet
-	Plaque.
+	**Class ExperimentCrystalVioletPlaque** 
+  This class is designed to contain metadata of multiple instances of a multititre plate of 
+  Crystal Violet plaques.
+    
+  Attributes:
+    plate_folder (str, required): The main directory containing subdirectories of the plates.
 
-	_Arguments_:
+    plate_mask_folder (str, required): The main directory containing subdirectories of the 
+                                      plate masks.
 
-	plate_folder - (str, required) main directory containing subdirectories of
-	the plates.
-
-	plate_mask_folder - (str, required) main directory containing subdirectories
-	of the plate masks.
-
-  params -(dict, optional) dictionary of parameters for crystal violet plaques,
-  thresholding etc.
-	"""
-
+    params (dict, optional): A dictionary of parameters for crystal violet plaques, thresholding, 
+                            etc. Default is an empty dictionary with default values set.
+  """
   def __init__(self, plate_folder, plate_mask_folder, params=None):
     #check data types
     if not isinstance(plate_folder, str):
@@ -76,17 +73,38 @@ class ExperimentCrystalVioletPlaque:
 
   def get_params(self):
     """
-    **get_params method** returns the parameters currently saved in the 
-    ExperimentCrystalVioletPlaque class
+    **get_params Method** 
+    Returns the parameters currently saved in the ExperimentCrystalVioletPlaque class.
+    
+    Args:
+      self (required): The instance of the class containing the data.
+    
+    Returns:
+      dict: A dictionary containing the current parameters set for the experiment.
     """
     return self.params
 
   def get_individual_plates(self, whole_plate=False,folder_pattern=None):
     """
-    **get_individual_wells method** returns the path of the directory of images
-    and masks of individual plates.
+    **get_individual_wells Method** 
+    This method retrieves the paths of directories containing images and masks for individual 
+    plates. If `whole_plate` is False, it filters the directories based on a given pattern or 
+    lists all directories if no pattern is provided.
+    
+    Args:
+      whole_plate (bool, optional): A flag to determine whether to consider that folders 
+                                    have whole plate images or not (wells images of a plate 
+                                    instead). Default is False.
+      folder_pattern (str, optional): A regular expression pattern used to filter directory names.
+    
+    Returns:
+      tuple of lists: The first list contains the paths to directories with images of individual 
+      plates, and the second list contains the paths to directories with masks for these 
+      plates.
+    
+    Raises:
+      ValueError: If `plate_folder` or `plate_mask_folder` is not a valid directory.
     """
-
     if not os.path.isdir(self.plate_folder):
       raise ValueError("plate_folder argument is not a directory. \
 			Please provide a valid directory.")
@@ -112,8 +130,19 @@ class ExperimentCrystalVioletPlaque:
 
   def get_number_of_plates(self):
     """
-    **get_number_of_plates method** returns the number of individual plates
-    detected.
+    **get_number_of_plates Method** 
+    This method returns the number of individual plates detected. It checks both the instance 
+    variable `plate_indiv_dir` and `full_plate_dict['img']` for the presence of plate directories or 
+    images, respectively. If no plates are found, it raises a ValueError indicating that the paths
+    should be checked again.
+    
+    Args:
+
+    Returns:
+        int: The number of individual plates detected in the instance's directory structure.
+    
+    Raises:
+       ValueError: If no plates are found in the directory or file structures.
     """
     if len(self.plate_indiv_dir) != 0:
       return len(self.plate_indiv_dir)
@@ -132,6 +161,7 @@ class ExperimentCrystalVioletPlaque:
 						keep_aspect_ratio=False,
 					):
     """
+    **read_from_path Method**
     Loads an image into PIL format.
 
     Usage:
@@ -141,28 +171,33 @@ class ExperimentCrystalVioletPlaque:
     ```
 
     Args:
-      path: Path to image file.
-      grayscale: DEPRECATED use `color_mode="grayscale"`.
-      color_mode: One of `"grayscale"`, `"rgb"`, `"rgba"`. Default: `"rgb"`.
-      The desired image format.
-      target_size: Either `None` (default to original size) or tuple of
-      ints `(img_height, img_width)`.
-      interpolation: Interpolation method used to resample the image if
-      the target size is different from that of the loaded image. Supported
-      methods are `"nearest"`, `"bilinear"`, and `"bicubic"`. If PIL version
-      1.1.3 or newer is installed, `"lanczos"` is also supported. If PIL
-      version 3.4.0 or newer is installed, `"box"` and `"hamming"` are also
-      supported. By default, `"nearest"` is used.
-      keep_aspect_ratio: Boolean, whether to resize images to a target
-      size without aspect ratio distortion. The image is cropped in
-      the center with target aspect ratio before resizing.
+      path (str or Path or io.BytesIO, required): The path to the image file, a `Path` object, or 
+                                                  an in-memory binary stream.
+      grayscale (bool, optional): Deprecated use `color_mode="grayscale"`. Defaults to False.
+      color_mode (str, optional): One of `"grayscale"`, `"rgb"`, `"rgba"`. Default: `"rgb"`. 
+                                  The desired image format.
+      target_size (tuple or list, optional): Either `None` (default to original size) or a tuple of 
+                                            ints `(img_height, img_width)`.
+      interpolation (str, optional): Interpolation method used to resample the image if the target 
+                                    size is different from that of the loaded image. Supported 
+                                    methods are `"nearest"`, `"bilinear"`, `"bicubic"`. If PIL 
+                                    version 1.1.3 or newer is installed, `"lanczos"` is also 
+                                    supported. If PIL version 3.4.0 or newer is installed, `"box"` 
+                                    and `"hamming"` are also supported. By default, `"nearest"` 
+                                    is used.
+      keep_aspect_ratio (bool, optional): Boolean, whether to resize images to a target size without 
+                                          aspect ratio distortion. The image is cropped in the 
+                                          center with target aspect ratio before resizing. 
+                                          Defaults to False.
+
 
     Returns:
-      A PIL Image instance.
+      PIL.Image.Image: A PIL Image instance.
 
     Raises:
       ImportError: if PIL is not available.
       ValueError: if interpolation method is not supported.
+      TypeError: If the provided `path` argument is not of a supported type.
     """
     if grayscale:
       warnings.warn(
@@ -252,7 +287,28 @@ class ExperimentCrystalVioletPlaque:
                                 read_mask = True,
                                 all_grayscale = False,
                                 ext = '*.png'):
-
+    """
+    **load_well_images_and_masks_for_plate Method**
+    This method loads images and masks for a specified plate. It supports loading from both image 
+    and mask folders or generating masks at runtime using specific parameters.
+    
+    Args:
+      self: The instance of the class containing the method.
+      plate_id (int, optional): The index of the plate to load images and masks for. Default is 0.
+      additional_subfolders (str, optional): Additional subfolders within the image and mask 
+                                            folders to consider. Defaults to None.
+      file_pattern (str, optional): A regex pattern to filter files by their stem. If provided,
+                                    only files matching this pattern will be loaded. Defaults to 
+                                    None.
+      read_mask (bool, optional): Whether to read masks from disk. If False, masks are generated 
+                                  at runtime using image processing parameters. Defaults to True.
+      all_grayscale (bool, optional): Whether to convert all images and masks to grayscale. 
+                                      Defaults to False.
+      ext (str, optional): The file extension pattern used to match files. Defaults to '*.png'.
+    
+    Returns:
+      dict: A dictionary containing the loaded images and masks for each well in the specified plate.
+    """
     d = self.plate_indiv_dir[plate_id]
 
     self.well_dict[d] = {}
@@ -317,6 +373,31 @@ class ExperimentCrystalVioletPlaque:
                                   file_pattern=None,
                                   all_grayscale=True,
                                   ext="*.png"):
+    """
+    **load_plate_images_and_masks Method**
+    Loads images and masks for plates from specified directories. This method reads image and mask 
+    files from the `plate_folder` and `plate_mask_folder`, applying optional additional subfolders 
+    and file patterns to narrow down the search. It supports grayscale conversion if requested, and 
+    organizes the loaded data into a dictionary for each plate.
+
+    Args:
+      self (object): The instance of the class where this method is called.
+      additional_subfolders (str, optional): Additional subdirectories within the main folders to 
+                                            search for images and masks. Defaults to None.
+      file_pattern (str, optional): A regex pattern to filter filenames. If provided, only files 
+                                    matching the pattern will be loaded. Defaults to None.
+      all_grayscale (bool, optional): Flag indicating whether all images should be converted to 
+                                      grayscale. Defaults to True.
+      ext (str, optional): The file extension to search for when loading images and masks. 
+                            Default is "*.png".
+
+    Returns:
+      dict: A dictionary containing the loaded images and masks for each plate, indexed by 
+      `plate_id`.
+
+    Raises:
+      ValueError: If either `plate_folder` or `plate_mask_folder` is not a valid directory.
+    """
     if not os.path.isdir(self.plate_folder):
       raise ValueError("plate_folder argument is not a directory. \
 			Please provide a valid directory.")
@@ -368,6 +449,18 @@ class ExperimentCrystalVioletPlaque:
     return self.full_plate_dict
 
   def extract_masked_plates(self):
+    """
+    **extract_masked_plates Method**
+    Extracts masked plate images from the full plate dictionary. This function iterates through each 
+    plate in the `full_plate_dict`, extracts the plate images, and applies a mask to create masked 
+    images for each plate.
+
+    Args:
+
+    Returns:
+      dict: The updated `full_plate_dict` containing the masked images for each well in all 
+      plates.
+    """
     plaques_well_list = [PlaquesWell(row = 0,
                               column = 0,
                               well_image = self.full_plate_dict[d]['img'],
@@ -380,6 +473,25 @@ class ExperimentCrystalVioletPlaque:
     return self.full_plate_dict     
 
   def extract_masked_wells(self,plate_id,row_pattern=None,col_pattern=None):
+    """
+    **extract_masked_wells Method**
+    Extracts masked well images from the specified plate.
+
+    Args:
+      plate_id (int, required): The index of the plate for which to extract masked wells.
+      row_pattern (re.Pattern, optional): A regular expression pattern to match well rows. 
+                                          Defaults to None.
+      col_pattern (re.Pattern, optional): A regular expression pattern to match well columns. 
+                                          Defaults to None.
+
+    Returns:
+      dict: The updated dictionary containing the masked images for each well.
+
+    Raises:
+      KeyError: If the specified plate ID does not exist in the `plate_indiv_dir` dictionary.
+      ValueError: If both `row_pattern` and `col_pattern` are provided, but they do not match any 
+      well indices.
+    """
     d= self.plate_indiv_dir[plate_id]
     if row_pattern and col_pattern:
       plaques_well_list = [PlaquesWell(row = re.findall(row_pattern, 

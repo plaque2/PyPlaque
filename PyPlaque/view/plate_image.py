@@ -11,58 +11,79 @@ from PyPlaque.utils import picks_area
 
 class PlateImage:
   """
-  **PlateImage Class** is aimed to contain a full multititre plate image and
-  its respective binary mask.
+  **PlateImage Class**
 
-  _Arguments_:
+  The PlateImage class is designed to encapsulate a full multi-title plate image and 
+  its corresponding binary mask. It provides methods to extract individual well images 
+  from the plate based on specified criteria, visualize these wells annotated with their positions, 
+  and more.
 
-  n_rows - (int, required) number of rows in the plate (usually lower than
-  the number of rows).
+  Attributes:
+    n_rows (int, required): The number of rows in the plate. This should be less than the number 
+                          of columns.
 
-  n_columns - (int, required) number of columns in the plate (usually higher
-  than the number of rows).
+    n_columns (int, required): The number of columns in the plate. This should be greater than the 
+                            number of rows.
 
-  plate_image - (np.array, required) an image of individual wells of the
-  plate.
+    plate_image (np.ndarray, required): A 2D or 3D numpy array representing the image of 
+                                      individual wells on the plate.
 
-  plate_mask - (np.array, required) a binary mask outlining individual wells of
-  the plate.
+    plate_mask (np.ndarray, required): A binary 2D numpy array that outlines the regions 
+                                    corresponding to each well.
 
-  inverted - (bool, required) an indicator of whether the plate.
+    use_picks (bool, optional): An indicator for whether to use pick area calculations during 
+                              analysis. Defaults to True.
 
-  It is advisable to have both dimensions of plate masks and images be 2 dim
+    inverted (bool, optional): A boolean flag indicating whether the plate image is inverted 
+                            or not.
+
   """
   def __init__(self,
-                n_rows,
-                n_columns,
-                plate_image,
-                plate_mask,
-                use_picks = True,
-                inverted = False):
-    #check data types
-    if not isinstance(n_rows, int):
-      raise TypeError('Expected n_rows argument to be int')
-    if not isinstance(n_columns, int):
-      raise TypeError('Expected n_columns argument to be int')
-    if (not isinstance(plate_image, np.ndarray)) or (not (plate_image.ndim >=2
-    and plate_image.ndim <= 3)):
-      raise TypeError('Image atribute of the plate must be a 2D numpy array')
-    if (not isinstance(plate_mask, np.ndarray)) or (not plate_mask.ndim == 2):
-      raise TypeError('Mask atribute of the plate must be a 2D numpy array')
-    if not isinstance(inverted, bool):
-      raise TypeError('inverted atribute of the plate must be of type bool')
+                  n_rows,
+                  n_columns,
+                  plate_image,
+                  plate_mask,
+                  use_picks = True,
+                  inverted = False):
+      #check data types
+      if not isinstance(n_rows, int):
+        raise TypeError('Expected n_rows argument to be int')
+      if not isinstance(n_columns, int):
+        raise TypeError('Expected n_columns argument to be int')
+      if (not isinstance(plate_image, np.ndarray)) or (not (plate_image.ndim >=2
+      and plate_image.ndim <= 3)):
+        raise TypeError('Image atribute of the plate must be a 2D numpy array')
+      if (not isinstance(plate_mask, np.ndarray)) or (not plate_mask.ndim == 2):
+        raise TypeError('Mask atribute of the plate must be a 2D numpy array')
+      if not isinstance(inverted, bool):
+        raise TypeError('inverted atribute of the plate must be of type bool')
 
-    self.n_rows = n_rows
-    self.n_columns = n_columns
-    self.plate_image = plate_image
-    self.plate_mask = plate_mask
-    self.use_picks = use_picks
-    self.inverted = inverted
+      self.n_rows = n_rows
+      self.n_columns = n_columns
+      self.plate_image = plate_image
+      self.plate_mask = plate_mask
+      self.use_picks = use_picks
+      self.inverted = inverted
 
   def get_wells(self, min_area = 100):
     """
-    **get_wells method** returns a list of individual wells of the plate
-    stored as binary numpy arrays.
+    **get_wells Method**
+    
+    This method identifies and returns individual wells from a plate image as binary numpy arrays. 
+    Each well is represented by its masked image within the bounding box derived from regionprops 
+    analysis after clearing border artifacts from the plate mask.
+    
+    Args:
+      min_area (int, optional): The minimum area in pixels for a well to be considered. 
+                                Default is 100.
+        
+    Returns:
+      list: A list of numpy arrays, where each array represents a well cropped from the 
+      plate image.
+    
+    Notes:
+      Wells are identified based on their area threshold and are extracted using bounding boxes 
+      derived from regionprops analysis after clearing border artifacts from the plate mask.
     """
     well_crops = []
     for _,well in enumerate(regionprops(label(clear_border(self.plate_mask)))):
@@ -78,9 +99,34 @@ class PlateImage:
 
   def get_well_positions(self, min_area = 100):
     """
-    **get_well_positions method** returns a list of individual wells of the
-    plate stored as binary numpy arrays along with a number with rows numbered
-    starting from 0 and columns numbered starting from 0.
+    **get_well_positions Method**
+    
+    This method identifies and returns individual wells from a plate image as binary numpy arrays. 
+    Each well is represented by its masked image, mask, cropped image, and bounding box coordinates 
+    along with row (nrow) and column (ncol) numbers.
+    
+    Args:
+      min_area (int, optional): The minimum area in pixels for a well to be considered. 
+                                Default is 100.
+        
+    Returns:
+      dict: A dictionary where each key corresponds to an individual well, 
+      containing the following items:
+          - 'masked_img' (numpy array): Binary mask of the well.
+          - 'mask' (numpy array): Binary mask of the plate region occupied by the well.
+          - 'img' (numpy array): Image cropped from the plate corresponding to the well.
+          - 'maxr' (int): Maximum row index of the bounding box for the well.
+          - 'minc' (int): Minimum column index of the bounding box for the well.
+          - 'minr' (int): Minimum row index of the bounding box for the well.
+          - 'maxc' (int): Maximum column index of the bounding box for the well.
+          - 'nrow' (int): Row number of the well, starting from 0.
+          - 'ncol' (int): Column number of the well, starting from 0.
+    
+    Notes:
+      The method processes the plate mask to identify and extract individual wells 
+      based on area threshold.Wells are identified using bounding boxes derived from regionprops 
+      analysis after clearing border artifacts. The returned dictionary is ordered by column 
+      unless the plate is inverted (in which case it orders by columns in reverse).
     """
     well_dict = {}
     well_crops = []
@@ -150,9 +196,26 @@ class PlateImage:
 
   def plot_well_positions(self,save_path = None):
     """
-    **plot_well_positions method** plot boxes around individual wells of
-    the plate (inferred from plate mask), with rows numbered starting from 1
-      and columns numbered starting from 1.
+    **plot_well_positions Method**
+
+    Plots boxes around individual wells of the plate using the mask. 
+    Wells are annotated with their row and column positions.
+    
+    This method visualizes the well locations on a plate by drawing white rectangles around each 
+    well inferred from the plate mask. The rows and columns are numbered starting from 0, and 
+    annotations indicate both the column and row numbers for each well.
+
+    Args:
+      save_path (str, optional): File path where the plot image will be saved. If None (default), 
+      the figure is shown but not saved.
+
+    Returns:
+      None
+    
+    Example:
+      To visualize and save the well positions on a plate with a specific mask, use:
+      
+      >>> instance_of_plate.plot_well_positions(save_path='path/to/save/figure.png')
     """
     _, ax = plt.subplots(figsize=(10, 6))
     ax.imshow(self.plate_mask)

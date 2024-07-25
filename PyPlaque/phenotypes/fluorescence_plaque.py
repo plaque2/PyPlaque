@@ -6,14 +6,26 @@ from PyPlaque.utils import check_numbers
 
 class FluorescencePlaque(Plaque):
   """
-  **FluorescencePlaque** conains plaque obtained from fluorescence image.
-  Class inherits from Plaque class and is also designed to hold a single
-  virological plaque phenotype.
+  **FluorescencePlaque Class** 
+  This class contains a plaque obtained from fluorescence image. Class inherits from Plaque class 
+  and is also designed to hold a single virological plaque phenotype.
+  
+  Args:
+    mask (2D numpy array, required): A binary mask representing a single virological plaque 
+                                    object.
+    
+    image (2D numpy array, required): A grayscale numpy array containing the image of a single 
+                                    virological plaque object.
+    
+    centroid (float tuple, optional): A tuple containing the x and y coordinates of the centroid 
+                                    of the plaque.
+    
+    bbox (float tuple, optional): A tuple containing the minr, minc, maxr, maxc limits of the 
+                                  bounding box surrounding the plaque.
 
-  _Additonal arguments_:
-
-  image - (required) numpy array containing grayscale image of a single
-  virological plaque object.
+  Raises:
+    TypeError: If the mask is not a 2D numpy array, if image is not a 2D numpy array, if centroid 
+    is not a tuple of coordinates, or if bbox is not a tuple of limits.
   """
   def __init__(self, mask, image, centroid = None, bbox = None):
     #check data types

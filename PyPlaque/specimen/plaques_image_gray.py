@@ -6,28 +6,32 @@ from PyPlaque.utils import fixed_threshold
 
 class PlaquesImageGray(PlaquesMask):
   """
-  **PlaqueImageGray class** designed to hold grayscale image data containing
-  multiple plaque phenotypes with a respective binary mask. The class inherits
-  from PlaquesMask.
+  **PlaqueImageGray Class** 
+  This class is designed to hold grayscale image data containing multiple plaque phenotypes with a 
+  respective binary mask. The class inherits from PlaquesMask.
+    
+  Args:
+    name (str, required): A string representing the name or identifier for the image sample. 
 
-  _Additonal arguments_:
+    image (np.ndarray,  required): A 2D numpy array containing grayscale image data of a 
+                                  virological plaque object, corresponding to the mask. 
 
-  name - (str, required) string, image sample name for identification
+    plaques_mask (np.ndarray, optional): A 2D numpy array representing the binary mask of all 
+                                        virological plaque objects. Defaults to None.
 
-  image - (np.array, required) numpy array containing 2D grayscale image of
-  a virological plaque object, respective to the mask. Used, in case of
-  measuring properties of fluorescent plaque image.
+    threshold (float, optional): A float between 0 and 1 representing a fixed threshold value for 
+                              creating the binary mask. Defaults to None.
 
-  plaques_mask - (np.array, optional, default None) numpy array containing
-  binary mask of all virological plaque objects.
+    sigma (int, optional): An integer representing the Gaussian blur sigma in pixels used by the 
+                        fixed thresholding approach. Defaults to 5.
 
-  threshold - (float between 0 and 1, optional, default None) fixed threshold
-  value for creating the binary mask.
+    use_picks (bool, optional): Indicates whether to use pick-based area calculation. 
+                              Defaults to True.
 
-  sigma - (int, optional, default = 5) guassian blur sigma in pixels used by
-  the fixed thresholding approach.
-
-  Either mask or fixed threshold must be provided
+  Raises:
+    TypeError: If `name` is not a string, if `image` is not a 2D numpy array, or if `plaques_mask` 
+    is not provided and neither `threshold` nor `sigma` are specified.
+    ValueError: If both `plaques_mask` and either `threshold` or `sigma` are not provided.
   """
 
   def __init__(self,

@@ -3,19 +3,24 @@ import numpy as np
 
 class PlaquesWell:
   """
-  **Class PlaquesWell** is aimed to contain a full well of a multititre plate.
+  **PlaquesWell Class** is aimed to contain a full well of a multititre plate.
+  
+  This class encapsulates methods to handle and manipulate images related to the plaques 
+  within the well.
+  
+  Attributes:
+    row (int or str): The identifier for the row where the well is located in the plate.
 
-  _Arguments_:
+    column (int or str): The identifier for the column where the well is located in the plate.
 
-  row - (int or str, required) row id of the well.
+    well_image (np.ndarray): A 2D or 3D numpy array representing the image of the well.
 
-  column - (int or str, required) column id of the well.
+    well_mask (np.ndarray): A 2D numpy array representing a binary mask of the well, used for 
+                          various purposes such as highlighting specific areas in the image.
 
-  well_image - (np.array, required) numpy array containing image of
-  the well.
-
-  well_mask  - (np.array, required) numpy array containing binary mask of
-  the well.
+  Raises:
+    TypeError: If `row` or `column` is not an integer or string; if `well_image` is not a 2D or 
+    3D numpy array; if `well_mask` is not a 2D numpy array.
   """
 
   def __init__(self, row, column, well_image, well_mask):
@@ -37,7 +42,17 @@ class PlaquesWell:
 
   def get_masked_image(self):
     """
-    **get_masked_image method** returns masked image of the well.
+    **get_masked_image Method** 
+    The method returns the masked image of the well. It applies a mask to the well image by 
+    element-wise multiplication between `well_image` and `well_mask`. This is typically used for 
+    visualizations or further processing where specific regions are highlighted or removed based 
+    on the mask.
+
+    Args:
+    
+    Returns:
+      np.ndarray: A masked version of the well image, where each pixel value is a result of 
+      multiplying corresponding pixels in `well_image` and `well_mask`.
     """
 
     return self.well_image ** self.well_mask

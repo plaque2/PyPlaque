@@ -8,6 +8,35 @@ from PyPlaque.utils import remove_background, picks_area
 
 
 def get_all_plaque_regions(image,threshold,plq_connect):
+    """
+    **get_all_plaque_regions Function**
+    This function identifies and labels all connected regions in a binary image that are likely to 
+    contain virus plaques. It processes the input grayscale `image` by applying a threshold to 
+    create a binary mask, then computes the distance transform of the inverted binary mask to 
+    identify plaque candidates. Connected components within this distance-transformed image are 
+    labeled and returned as a label matrix. The original background pixels in the label matrix are 
+    set to 0 where they were not present in the input binary mask.
+    
+    Args:
+        image (np.ndarray, required): A 2D numpy array representing the grayscale image of the 
+                                    tissue section.
+        threshold (float, required): A float value that determines the pixel intensity below which 
+                                    pixels are considered part of the background.
+        plq_connect (int, required): An integer specifying the maximum distance within which 
+                                    connected components are grouped to be considered as potential 
+                                    virus plaques.
+    
+    Returns:
+        np.ndarray: A 2D numpy array of integers where each unique value represents a different 
+        connected region in the input image, likely containing virus plaques. Pixels not part of any 
+        plaque or background are set to 0.
+        
+    Raises:
+        TypeError: If `image` is not a 2D numpy array, `threshold` is not a float, or `plq_connect` 
+        is not an integer.
+        ValueError: If `threshold` is outside the valid range for pixel intensities in `image` or 
+        if `plq_connect` is less than or equal to zero.
+    """
     bw =  image > threshold
     distance = ndi.distance_transform_edt(~bw)
     bw2 = distance <= plq_connect
@@ -20,6 +49,33 @@ def get_all_plaque_regions(image,threshold,plq_connect):
 
 
 def get_plaque_mask(input_image,virus_params):
+    """
+    **get_plaque_mask Function**
+    This function generates a mask of virus plaques in an input image based on specified parameters.
+    It processes the input image to identify and segment regions that are likely to contain virus 
+    plaques. It uses thresholding and morphological operations to create a binary mask where plaque 
+    regions are white (1) and background is black (0). The function optionally performs fine-grained 
+    plaque detection if enabled in `virus_params`.
+    
+    Args:
+        input_image (np.ndarray, required): A 2D numpy array representing the grayscale image of the 
+                                            tissue section.
+        virus_params (dict, required): A dictionary containing parameters for virus plaque 
+                                    detection, including threshold value, connectivity, and other
+                                     morphological operations settings.
+    
+    Returns:
+        tuple: A tuple containing two elements:
+            - final_plq_reg_image (np.ndarray): A 2D numpy array of the same size as `input_image` 
+            with plaque regions marked by white pixels (1) and background by black pixels (0).
+            - global_peak_coords (np.ndarray or None): An array of coordinates where local peaks 
+            were detected in the final mask, if fine detection is enabled; otherwise, returns None.
+        
+    Raises:
+        TypeError: If `input_image` is not a 2D numpy array or `virus_params` is not a dictionary.
+        ValueError: If any parameter within `virus_params` does not match its expected type or value 
+        range as specified in the method signature.
+    """
     label_image =  get_all_plaque_regions(input_image,
                               virus_params['virus_threshold'],
                               virus_params['plaque_connectivity'])
@@ -85,6 +141,29 @@ def get_plaque_mask(input_image,virus_params):
 
 
 def plot_virus_contours(input_image,virus_params,save_path=None):
+    """
+    **plot_virus_contours Function**
+    This function plots contours of virus plaques on a modified grayscale image. It processes an 
+    input image to remove its background and then generates a mask for the plaque region. It uses 
+    these masks to find and plot the contours of the virus plaques using custom colors and markers. 
+    The final image is displayed interactively or saved to disk if a save path is provided.
+    
+    Args:
+        input_image (np.ndarray, required): A 2D numpy array representing the grayscale input image 
+                                            of the tissue section containing virus plaques.
+        virus_params (dict, required): A dictionary containing parameters for virus plaque detection 
+                                        and correction, including 'correction_ball_radius'.    
+        save_path (str or None, optional): The file path where the plot will be saved if provided; 
+                                        otherwise, it is displayed interactively. Defaults to None.
+    
+    Returns:
+        None: The function generates a matplotlib plot based on the arguments provided and 
+        optionally saves it to disk.
+        
+    Raises:
+        TypeError: If any of the input arguments do not match their expected types as specified 
+        in the method signature.
+    """
     _, bg_removed_img = remove_background(input_image,
                                   radius=virus_params['correction_ball_radius'])
     final_plq_reg_image, global_peak_coords = get_plaque_mask(input_image,virus_params)

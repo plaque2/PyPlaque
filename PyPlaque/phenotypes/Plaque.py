@@ -8,19 +8,27 @@ from PyPlaque.utils import check_numbers, picks_area, picks_perimeter
 
 class Plaque:
   """
-  **Plaque** class is designed to hold a single virological plaque
-  phenotype as an object.
-
-  _Arguments_:
-
-  mask - (required, 2D numpy array) containing binary mask of a single
-  virological plaque object.
-
-  centroid - (float tuple, optional) contains x and y of the centroid of the
-  plaque object
-
-  bbox - (float tuple, optional) contains minr, minc, maxr, maxc of the
-  plaque object
+  **Plaque Class** 
+  The Plaque class is designed to hold a single virological plaque phenotype as an object. It 
+  encapsulates the properties and behaviors related to a specific plaque, including its mask, 
+  centroid coordinates, bounding box, and usage preference for pick measurements.
+    
+  Args:
+      mask (2D numpy array, required): A binary mask representing a single virological plaque 
+      object.
+      
+      centroid (float tuple, optional): A tuple containing the x and y coordinates of the centroid 
+      of the plaque.
+      
+      bbox (float tuple, optional): A tuple containing the minr, minc, maxr, maxc limits of the 
+      bounding box surrounding the plaque.
+      
+      use_picks (bool, optional): A boolean flag indicating whether to use pick measurements or not. 
+      Defaults to True.
+  
+  Raises:
+      TypeError: If the mask is not a 2D numpy array, if centroid is not a tuple of coordinates, 
+      or if bbox is not a tuple of limits.
   """
 
   def __init__(self, mask, centroid = None, bbox = None, use_picks=True):
@@ -50,11 +58,20 @@ class Plaque:
 
   def measure(self):
     """
-    **measure method** returns for an individual plaque object,the area of the
-    bbox surrounding a plaque, and an approximation of the actual area based on
-    the proportion of white pixels in the mask.
-
-    _Arguments_:
+    **measure Method** 
+    Computes and returns the bounding box area (in pixels) of a plaque object, as well as an 
+    approximation of its actual area based on the proportion of white pixels in the mask. The 
+    method uses either the pre-computed `self.area` if available or calculates it from the binary 
+    mask (`self.mask`) if not.
+    
+    Args:
+      None: The method operates directly on the instance's attributes (`self.bbox`, 
+      `self.use_picks`, `self.mask`, `self.area`).
+        
+    Returns:
+      tuple: A tuple containing two elements, the first is the area of the bounding box 
+      surrounding the plaque (in pixels), and the second is an approximation of the actual area 
+      based on the mask (also in pixels).
     """
     plq_bbox_area = (self.bbox[3] - self.bbox[1]) * (self.bbox[2]
     - self.bbox[0]) # assuming bbox = (minr, minc, maxr, maxc)
@@ -68,12 +85,17 @@ class Plaque:
 
   def eccentricity(self):
     """
-    **eccentricity method** returns for an individual plaque object,the eccentricity of the 
-    plaque which is found by fitting an ellipse to the plaque boundary and finding the eccentricity 
-    given by sqrt(1-(b^2/a^2)) where b is the length of the semi-minor axis and a is the length of 
-    the semi-major axis.
-
-    _Arguments_:
+    **eccentricity Method** 
+    Calculates and returns the eccentricity of an individual plaque object. The eccentricity is 
+    determined by fitting an ellipse to the plaque's boundary contour and using the formula 
+    sqrt(1 - (b^2 / a^2)), where b represents the length of the semi-minor axis, and a represents 
+    the length of the semi-major axis.
+    
+    Args:
+      None: The method operates directly on the instance's attributes (`self.mask`).
+        
+    Returns:
+      float: The calculated eccentricity value of the plaque.
     """
     # find the contours
     contours,_ = cv2.findContours(self.mask, cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
@@ -108,11 +130,18 @@ class Plaque:
 
   def roundness(self):
     """
-    **roundness method** returns for an individual plaque object,the roundness of the plaque 
-    which is found by the following ratio given by 4 * pi * Area / ( Perimeter^2 ) where 
-    Area is 4 * pi * radius^2 and Perimeter is 2 * pi * radius.
-
-    _Arguments_:
+    **roundness Method** 
+    Calculates and returns the roundness of an individual plaque object. The roundness is calculated 
+    using the formula 4 * pi * Area / (Perimeter^2), where Area is estimated as pi * radius^2, 
+    and Perimeter is calculated as 2 * pi * radius. This method uses either Pick's measured area and 
+    perimeter or estimates them based on bounding box coordinates if not already computed.
+    
+    Args:
+      None: The method operates directly on the instance's attributes (`self.use_picks`, 
+      `self.perimeter`, `self.bbox`).
+      
+    Returns:
+      float: The calculated roundness value of the plaque.
     """
     _, plq_area = self.measure()
 

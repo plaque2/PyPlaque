@@ -28,22 +28,22 @@ if pil_image is not None:
 
 class ExperimentFluorescencePlaque:
   """
-	**Class ExperimentFluorescencePlaque** is aimed to contain metadata of
-  multiple instances of a full well of a multititre plate of Fluorescence
-  Plaque.
+	**ExperimentFluorescencePlaque Class** 
+  It is aimed to contain metadata of multiple instances of a multititre plate of Fluorescence 
+  plaques.
+    
+  Attributes:
+    plate_folder (str, required): The main directory containing subdirectories of the plates.
+    
+    plate_mask_folder (str, required): The main directory containing subdirectories of the 
+                                    plate masks.
+    
+    params (dict, optional): A dictionary of parameters for nuclei and virus channels to be used 
+                            for generating masks and readouts. Default is an empty dictionary.
 
-	_Arguments_:
-
-	plate_folder - (str, required) main directory containing subdirectories of
-  the plates.
-
-	plate_mask_folder - (str, required) main directory containing subdirectories
-  of the plate masks.
-
-  params -(dict, optional) dictionary of parameters for nuclei and virus channels 
-  to be used for generating masks and readouts.
-	"""
-
+  Raises:
+    TypeError: If the provided arguments are not of the expected type.
+  """
   def __init__(self, plate_folder, plate_mask_folder, params=None):
 		#check data types
     if not isinstance(plate_folder, str):
@@ -103,17 +103,33 @@ class ExperimentFluorescencePlaque:
 
   def get_params(self):
     """
-    **get_params method** returns the parameters currently saved in the 
-    ExperimentFluorescencePlaque class
+    **get_params Method** 
+    Returns the parameters currently saved in the ExperimentFluorescencePlaque class.
+    
+    Args:
+      self (required): The instance of the class containing the data.
+    
+    Returns:
+      dict: A dictionary containing the current parameters set for the experiment.
     """
     return self.params
 
   def get_individual_plates(self, folder_pattern=None):
     """
-    **get_individual_wells method** returns the path of the directory of images
-    and masks of individual plates.
+    **get_individual_plates Method** 
+    Retrieves the paths of directories containing images and masks for individual plates.
+    
+    Args:
+      self (required): The instance of the class containing the data.
+      folder_pattern (str, optional): A regex pattern to filter directory names by their stem.
+  
+    Returns:
+      tuple: A tuple containing two lists - one with paths to image directories and another with 
+      paths to mask directories.
+  
+    Raises:
+      ValueError: If the provided plate or plate_mask folder is not a valid directory.
     """
-
     if not os.path.isdir(self.plate_folder):
       raise ValueError("plate_folder argument is not a directory. \
       Please provide a valid directory.")
@@ -139,10 +155,15 @@ class ExperimentFluorescencePlaque:
 
   def get_number_of_plates(self):
     """
-    **get_number_of_plates method** returns the number of individual plates
-    detected.
+    **get_number_of_plates Method** 
+    Returns the number of individual plates detected in the experiment.
+    
+    Args:
+      self (required): The instance of the class containing the data.
+    
+    Returns:
+      int: The total number of plates present in the plate directory.
     """
-
     return len(self.plate_indiv_dir)
 
   def load_wells_for_plate_virus(self, 
@@ -150,6 +171,24 @@ class ExperimentFluorescencePlaque:
                                 additional_subfolders=None, 
                                 file_pattern=None, 
                                 ext = '*.tif'):
+    """
+    **load_wells_for_plate_virus Method**
+    Loads the images and masks for the virus channel from specified wells in a fluorescence plaque 
+    experiment.
+    
+    Args:
+      self (required): The instance of the class containing the data.
+      plate_id (int, optional): The index of the plate to load. Default is 0.
+      additional_subfolders (str, optional): Additional subfolder path within the plate directory.
+      file_pattern (str, optional): A regex pattern to filter image files by their stem.
+      ext (str, optional): The file extension to match for images. Default is '*.tif'.
+  
+    Returns:
+      self: The instance of the class with loaded data stored in plate_dict_w2.
+    
+    Raises:
+      FileNotFoundError: If the specified image path does not exist.
+    """
     d = self.plate_indiv_dir[plate_id]
 
     self.plate_dict_w2[d] = {}
@@ -183,6 +222,24 @@ class ExperimentFluorescencePlaque:
                                   additional_subfolders=None, 
                                   file_pattern=None,
                                   ext='*.tif'):
+    """
+    **load_wells_for_plate_nuclei Method**
+    Loads the images and masks for the nuclei channel from specified wells in a fluorescence 
+    plaque experiment.
+    
+    Args:
+      self (required): The instance of the class containing the data.
+      plate_id (int, optional): The index of the plate to load. Default is 0.
+      additional_subfolders (str, optional): Additional subfolder path within the plate directory.
+      file_pattern (str, optional): A regex pattern to filter image files by their stem.
+      ext (str, optional): The file extension to match for images. Default is '*.tif'.
+  
+    Returns:
+      self: The instance of the class with loaded data stored in plate_dict_w1.
+    
+    Raises:
+      FileNotFoundError: If the specified image path does not exist.
+    """
     d = self.plate_indiv_dir[plate_id]
 
     self.plate_dict_w1[d] = {}
@@ -233,37 +290,43 @@ class ExperimentFluorescencePlaque:
 						keep_aspect_ratio=False,
 					):
     """
+    **read_from_path Method**
     Loads an image into PIL format.
 
     Usage:
 
     ```
-    image = pyplaque.ExperimentCrystalVioletPlaque.read_from_path(image_path)
+    image = pyplaque.ExperimentFluorescencePlaque.read_from_path(image_path)
     ```
 
     Args:
-      path: Path to image file.
-      grayscale: DEPRECATED use `color_mode="grayscale"`.
-      color_mode: One of `"grayscale"`, `"rgb"`, `"rgba"`. Default: `"rgb"`.
-      The desired image format.
-      target_size: Either `None` (default to original size) or tuple of
-      ints `(img_height, img_width)`.
-      interpolation: Interpolation method used to resample the image if
-      the target size is different from that of the loaded image. Supported
-      methods are `"nearest"`, `"bilinear"`, and `"bicubic"`. If PIL version
-      1.1.3 or newer is installed, `"lanczos"` is also supported. If PIL
-      version 3.4.0 or newer is installed, `"box"` and `"hamming"` are also
-      supported. By default, `"nearest"` is used.
-      keep_aspect_ratio: Boolean, whether to resize images to a target
-      size without aspect ratio distortion. The image is cropped in
-      the center with target aspect ratio before resizing.
+      path (str or Path or io.BytesIO, required): The path to the image file, a `Path` object, or 
+                                                  an in-memory binary stream.
+      grayscale (bool, optional): Deprecated use `color_mode="grayscale"`. Defaults to False.
+      color_mode (str, optional): One of `"grayscale"`, `"rgb"`, `"rgba"`. Default: `"rgb"`. 
+                                  The desired image format.
+      target_size (tuple or list, optional): Either `None` (default to original size) or a tuple of 
+                                            ints `(img_height, img_width)`.
+      interpolation (str, optional): Interpolation method used to resample the image if the target 
+                                    size is different from that of the loaded image. Supported 
+                                    methods are `"nearest"`, `"bilinear"`, `"bicubic"`. If PIL 
+                                    version 1.1.3 or newer is installed, `"lanczos"` is also 
+                                    supported. If PIL version 3.4.0 or newer is installed, `"box"` 
+                                    and `"hamming"` are also supported. By default, `"nearest"` 
+                                    is used.
+      keep_aspect_ratio (bool, optional): Boolean, whether to resize images to a target size without 
+                                          aspect ratio distortion. The image is cropped in the 
+                                          center with target aspect ratio before resizing. 
+                                          Defaults to False.
+
 
     Returns:
-      A PIL Image instance.
+      PIL.Image.Image: A PIL Image instance.
 
     Raises:
       ImportError: if PIL is not available.
       ValueError: if interpolation method is not supported.
+      TypeError: If the provided `path` argument is not of a supported type.
     """
     if grayscale:
       warnings.warn(

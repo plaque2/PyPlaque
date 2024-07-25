@@ -6,13 +6,25 @@ from PyPlaque.view import WellImageReadout
 
 class PlateReadout:
     """
-    **Class PlateReadout** is aimed to contain readouts of multiple wells of a single plate 
+    **PlateReadout Class** 
+    The PlateReadout Class is aimed to contain readouts of multiple wells of a single plate 
     of a Fluorescence Plaque.
 
-    _Arguments_:
-    experiment - (object, required) ExperimentFluorescencePlaque class object initialized with 
-                parameters and data of well plate of Fluorescence Plaques loaded.
+    Attributes:
+        experiment (object, required): ExperimentFluorescencePlaque class object initialized with 
+                    parameters and data of well plate of Fluorescence Plaques loaded.
+        
+        plate_id (int, optional): Identifier for the plate. Default is 0.
+        
+        well_level_readouts (bool, optional): Flag to indicate whether to include well-level 
+                    readouts. Default is True.
+        
+        object_level_readouts (bool, optional): Flag to indicate whether to include object-level 
+                    readouts. Default is True.
 
+    Raises:
+        ValueError: If both types of readouts are set to False. At least one should be True. 
+        Please check again.
     """
 
     def __init__(self,
@@ -32,6 +44,30 @@ class PlateReadout:
     def generate_readouts_dataframe(self, 
                                     row_pattern = r'([A-Z]{1})[0-9]{2}', 
                                     column_pattern = r'[A-Z]{1}([0-9]{2})'):
+        """
+        **generate_readouts_dataframe Method**
+        
+        Processes a list of plaque object readouts to generate summary statistics at both levels.
+
+        Args:
+            row_pattern (regex, optional): A regular expression to find the row identifier in the 
+                                        well name.
+            column_pattern (regex, optional): A regular expression to find the column identifier in 
+                                            the well name.
+
+        Returns:
+            - If both well and object level readouts are present:
+                abs_df_well (pd.DataFrame): A DataFrame containing well-level summary statistics.
+                abs_df_object (pd.DataFrame): A DataFrame containing object-level summary statistics.
+            - If only well level readouts are present:
+                abs_df_well (pd.DataFrame): A DataFrame containing well-level summary statistics.
+            - If only object level readouts are present:
+                abs_df_object (pd.DataFrame): A DataFrame containing object-level summary statistics.
+        Raises:
+            Any exceptions that might be raised by the methods called on plq_object_readouts 
+            or during dataframe creation can be handled here, but this method does not explicitly 
+            raise any errors itself.
+        """
         d = self.experiment.plate_indiv_dir[self.plate_id]
         if len(self.experiment.plate_dict_w1[d]['img']) != len(
                                                         self.experiment.plate_dict_w2[d]['img']):

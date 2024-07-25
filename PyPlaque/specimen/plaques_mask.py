@@ -10,15 +10,20 @@ from PyPlaque.utils import centroid, picks_area
 
 class PlaquesMask:
   """
-  **PlaquesMask class** designed to hold binary mask of multiple
-  plaque instances in a well.
+  **PlaquesMask Class** 
+  This class is designed to hold a binary mask of multiple plaque instances in a well.
+    
+  Attributes:
+    name (str, required): A string representing the name or identifier for the well image. 
 
-  _Arguments_:
+    plaques_mask (np.ndarray, required): A 2D numpy array that serves as a binary mask for all 
+                                          plaque objects. 
 
-  name - (str, required) string, well image name for identification
+    use_picks (bool, optional): Indicates whether to use pick-based area calculation. 
+                              Defaults to True.
 
-  plaques_mask - (np.array, required) numpy array of the
-  binary mask of all plaque objects.
+  Raises:
+    TypeError: If `name` is not a string or if `plaques_mask` is not a 2D numpy array.
   """
   def __init__(self, name, plaques_mask, use_picks=True):
     # check types
@@ -37,16 +42,20 @@ class PlaquesMask:
 
   def get_plaques(self, min_area = 100, max_area = 200):
     """
-    **get_plaques method** returns a list of individual plaques
-    stored as binary numpy arrays.
-
-    _Arguments_:
-
-    min_area - (int, optional, default = 100) a cut-off value for plaque area
-    in px.
-
-    max_area - (int, optional, default = 200) a cut-off value for plaque area
-    in px.
+    **get_plaques Method** 
+    This method returns a list of individual plaques stored as binary numpy arrays. This function 
+    filters and processes the plaque masks based on specified area criteria.
+    
+    Args:
+      min_area (int, optional): A cut-off value for plaque area in pixels. Defaults to 100.
+      max_area (int, optional): A cut-off value for plaque area in pixels. Defaults to 200.
+      
+    Returns:
+      list: A list of Plaque objects each represented as a binary numpy array.
+    
+    Raises:
+      TypeError: If `min_area` or `max_area` is not an integer.
+      ValueError: If the provided area criteria are invalid (e.g., min_area > max_area).
     """
     if not isinstance(min_area, int):
       raise TypeError('minimum area parameter must be int')
@@ -73,15 +82,27 @@ class PlaquesMask:
 
   def get_measure(self, plaques_list):
     """
-    **get_measure method** returns a list of measurements based on the input of
-    list of plaques as a dictionary. For cumulative measurements as compared to
-    the measure method under class PyPlaque.phenotypes.Plaque that gives
-    granular measurements based on each plaque.
-
-    _Arguments_:
-
-    plaques_list - (list, required) a list of object of type
-    PyPlaque.phenotypes.Plaque from which several measures can be calculated.
+    **get_measure Method** 
+    This method returns a list of measurements based on the input of a list of 
+    PyPlaque.phenotypes.Plaque objects. These measurements include cumulative statistics such as 
+    mean and median plaque sizes, along with individual properties like eccentricity and roundness 
+    for each plaque in the list. Additionally, it calculates the centroid of all plaques in the 
+    list.
+    
+    Args:
+      plaques_list (list, required): A list of PyPlaque.phenotypes.Plaque objects from which 
+                                      several measures can be calculated.
+        
+    Returns:
+      dict: A dictionary containing the following measurements:
+          - 'mean_plq_size': The mean area of the plaques in the list.
+          - 'med_plq_size': The median area of the plaques in the list.
+          - 'centroid': The centroid coordinates (x, y) of all plaques in the list.
+          - 'mean_plq_ecc': The mean eccentricity of the plaques in the list.
+          - 'mean_roundness': The mean roundness of the plaques in the list.
+          
+    Raises:
+      AttributeError: If `plaques_list` is not provided or improperly formatted.
     """
     plq_area_ls = []
     plq_ecc_ls = []
@@ -125,14 +146,23 @@ class PlaquesMask:
 
   def plot_centroid(self,i,j,save_path=None):
     """
-    **plot_centroid method** plots a dotted ring around all the plaques that
-    are found in the mask. This ring is centred at the centroid of all the
-    centres of individual plaques found.
-
-    _Arguments_:
-
-    plaques_list - (list, required) a list of object of type
-    PyPlaque.phenotypes.Plaque from which several measures can be calculated.
+    **plot_centroid Method** 
+    This method plots a dotted ring around all the plaques that are found in the mask. 
+    This ring is centered at the centroid of all the centers of individual plaques found.
+    
+    Args:
+      i (int, required): The row index of the well where the plaques are located.
+      j (int, required): The column index of the well where the plaques are located. 
+      save_path (str, optional): The file path to save the plotted image. 
+                              If provided, the plot will be saved to this location with high-quality 
+                              settings.
+  
+    Returns:
+      None
+        
+    Raises:
+      AttributeError: If `self.plaques_mask` or `self.measure_dict['centroid']` 
+      is not properly defined in the instance.
     """
 
     # Create a figure. Equal aspect so circles look circular
