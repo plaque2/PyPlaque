@@ -42,7 +42,7 @@ setup(
           'Pillow>=10.3.0',
           'pandas>=1.5.3',
           'scipy>=1.13.1',
-          'scikit-learn>=1.5.0'
+          'scikit-learn>=1.5.0',
           'seaborn>=0.12.2',
           'tqdm>=4.66.4',
           'tifffile>=2023.2.28'
