@@ -6,13 +6,25 @@ from PyPlaque.view import WellImageReadout
 
 class PlateReadout:
     """
-    **Class PlateReadout** is aimed to contain readouts of multiple wells of a single plate 
+    **PlateReadout Class** 
+    The PlateReadout Class is aimed to contain readouts of multiple wells of a single plate 
     of a Fluorescence Plaque.
 
-    _Arguments_:
-    experiment - (object, required) ExperimentFluorescencePlaque class object initialized with 
-                parameters and data of well plate of Fluorescence Plaques loaded.
+    Attributes:
+        experiment (object, required): ExperimentFluorescencePlaque class object initialized with 
+                    parameters and data of well plate of Fluorescence Plaques loaded.
+        
+        plate_id (int, optional): Identifier for the plate. Default is 0.
+        
+        well_level_readouts (bool, optional): Flag to indicate whether to include well-level 
+                    readouts. Default is True.
+        
+        object_level_readouts (bool, optional): Flag to indicate whether to include object-level 
+                    readouts. Default is True.
 
+    Raises:
+        ValueError: If both types of readouts are set to False. At least one should be True. 
+        Please check again.
     """
 
     def __init__(self,
@@ -26,15 +38,41 @@ class PlateReadout:
         self.object_level_readouts = object_level_readouts
 
         if well_level_readouts == False and object_level_readouts==False:
-            raise ValueError("Both types of readouts are set to False. At least one should be True. \
-            Please check again.")
+            raise ValueError("Both types of readouts are set to False. At least one should be \
+            True. Please check again.")
 
     def generate_readouts_dataframe(self, 
                                     row_pattern = r'([A-Z]{1})[0-9]{2}', 
                                     column_pattern = r'[A-Z]{1}([0-9]{2})'):
+        """
+        **generate_readouts_dataframe Method**
+        
+        Processes a list of plaque object readouts to generate summary statistics at both levels.
+
+        Args:
+            row_pattern (regex, optional): A regular expression to find the row identifier in the 
+                                        well name.
+            column_pattern (regex, optional): A regular expression to find the column identifier in 
+                                            the well name.
+
+        Returns:
+            - If both well and object level readouts are present:
+                abs_df_well (pd.DataFrame): A DataFrame containing well-level summary statistics.
+                abs_df_object (pd.DataFrame): A DataFrame containing object-level summary statistics.
+            - If only well level readouts are present:
+                abs_df_well (pd.DataFrame): A DataFrame containing well-level summary statistics.
+            - If only object level readouts are present:
+                abs_df_object (pd.DataFrame): A DataFrame containing object-level summary statistics.
+        Raises:
+            Any exceptions that might be raised by the methods called on plq_object_readouts 
+            or during dataframe creation can be handled here, but this method does not explicitly 
+            raise any errors itself.
+        """
         d = self.experiment.plate_indiv_dir[self.plate_id]
-        if len(self.experiment.plate_dict_w1[d]['img']) != len(self.experiment.plate_dict_w2[d]['img']):
-            raise ValueError("Expected equal number of image names, images and masks for both channels.Please check again.")
+        if len(self.experiment.plate_dict_w1[d]['img']) != len(
+                                                        self.experiment.plate_dict_w2[d]['img']):
+            raise ValueError("Expected equal number of image names, images and masks for \
+            both channels.Please check again.")
         
         abs_df_well = pd.DataFrame()
         abs_df_object = pd.DataFrame()
@@ -72,14 +110,14 @@ class PlateReadout:
 
         #Assuming that w1 is the nuclei channel and w2 as the plaque channel
         for i in tqdm(range(len(self.experiment.plate_dict_w2[d]['img']))):
-            plq_image_readout = WellImageReadout(nuclei_image_name=str(self.experiment.plate_dict_w1[d]
-                                                ['image_name'][i]).split("/")[-1],
-                                    plaque_image_name=str(self.experiment.plate_dict_w2[d]['image_name'][i]).split("/")[-1],
-                                    nuclei_image=np.array(self.experiment.plate_dict_w1[d]['img'][i]),
-                                    plaque_image=np.array(self.experiment.plate_dict_w2[d]['img'][i]),
-                                    nuclei_mask=np.array(self.experiment.plate_dict_w1[d]['mask'][i]),
-                                    plaque_mask=np.array(self.experiment.plate_dict_w2[d]['mask'][i]),
-                                    virus_params = self.experiment.params['virus'])
+            plq_image_readout = WellImageReadout(nuclei_image_name=
+            str(self.experiment.plate_dict_w1[d]['image_name'][i]).split("/")[-1],
+            plaque_image_name=str(self.experiment.plate_dict_w2[d]['image_name'][i]).split("/")[-1],
+            nuclei_image=np.array(self.experiment.plate_dict_w1[d]['img'][i]),
+            plaque_image=np.array(self.experiment.plate_dict_w2[d]['img'][i]),
+            nuclei_mask=np.array(self.experiment.plate_dict_w1[d]['mask'][i]),
+            plaque_mask=np.array(self.experiment.plate_dict_w2[d]['mask'][i]),
+            virus_params = self.experiment.params['virus'])
 
             if self.well_level_readouts:
                 virus_image_name.append(plq_image_readout.plaque_image_name)
@@ -100,26 +138,45 @@ class PlateReadout:
                 well_column.append(plq_image_readout.get_column(column_pattern = column_pattern))
 
                 if len(plq_objects) != 0:
-                    plq_object_readouts = [plq_image_readout.call_plaque_object_readout(plq_object,self.experiment.params['virus']) 
-                                                                    for plq_object in plq_objects]
+                    plq_object_readouts = [plq_image_readout.call_plaque_object_readout(plq_object,
+                    self.experiment.params['virus']) for plq_object in plq_objects]
 
                 
 
                 if len(plq_objects) != 0:
-                    area_abs.append(np.mean([plq_object_readout.get_area() for plq_object_readout in plq_object_readouts]))
-                    centroid_1_abs.append(np.mean([plq_object_readout.get_centroid()[0] for plq_object_readout in plq_object_readouts]))
-                    centroid_2_abs.append(np.mean([plq_object_readout.get_centroid()[1] for plq_object_readout in plq_object_readouts]))
-                    major_axis_length_abs.append(np.mean([plq_object_readout.get_major_minor_axis_length()[0] for plq_object_readout in plq_object_readouts]))
-                    minor_axis_length_abs.append(np.mean([plq_object_readout.get_major_minor_axis_length()[1] for plq_object_readout in plq_object_readouts]))
-                    eccentricity_abs.append(np.mean([plq_object_readout.get_eccentricity() for plq_object_readout in plq_object_readouts]))
-                    convex_area_abs.append(np.mean([plq_object_readout.get_convex_area() for plq_object_readout in plq_object_readouts]))
-                    roundness_abs.append(np.mean([plq_object_readout.roundness() for plq_object_readout in plq_object_readouts]))
-                    peak_counts_abs.append(np.mean([len(plq_object_readout.get_number_of_peaks()) for plq_object_readout in plq_object_readouts]))
-                    nuclei_in_plaque_abs.append(np.mean([plq_object_readout.get_nuclei_in_plaque() for plq_object_readout in plq_object_readouts]))
-                    infected_nuclei_in_plaque_abs.append(np.mean([plq_object_readout.get_infected_nuclei_in_plaque() for plq_object_readout in plq_object_readouts]))
-                    max_intensity_GFP_abs.append(np.mean([plq_object_readout.get_max_intensity_GFP() for plq_object_readout in plq_object_readouts]))
-                    total_intensity_GFP_abs.append(np.mean([plq_object_readout.get_total_intensity_GFP() for plq_object_readout in plq_object_readouts]))
-                    mean_intensity_GFP_abs.append(np.mean([plq_object_readout.get_mean_intensity_GFP() for plq_object_readout in plq_object_readouts]))
+                    area_abs.append(np.mean([plq_object_readout.get_area() 
+                    for plq_object_readout in plq_object_readouts]))
+                    centroid_1_abs.append(np.mean([plq_object_readout.get_centroid()[0] 
+                    for plq_object_readout in plq_object_readouts]))
+                    centroid_2_abs.append(np.mean([plq_object_readout.get_centroid()[1] 
+                    for plq_object_readout in plq_object_readouts]))
+                    major_axis_length_abs.append(np.mean([
+                        plq_object_readout.get_major_minor_axis_length()[0] 
+                        for plq_object_readout in plq_object_readouts]))
+                    minor_axis_length_abs.append(np.mean([
+                        plq_object_readout.get_major_minor_axis_length()[1] 
+                        for plq_object_readout in plq_object_readouts]))
+                    eccentricity_abs.append(np.mean([plq_object_readout.get_eccentricity() 
+                    for plq_object_readout in plq_object_readouts]))
+                    convex_area_abs.append(np.mean([plq_object_readout.get_convex_area() 
+                    for plq_object_readout in plq_object_readouts]))
+                    roundness_abs.append(np.mean([plq_object_readout.get_roundness() 
+                    for plq_object_readout in plq_object_readouts]))
+                    peak_counts_abs.append(np.mean([len(plq_object_readout.get_number_of_peaks()) 
+                    for plq_object_readout in plq_object_readouts]))
+                    nuclei_in_plaque_abs.append(np.mean([plq_object_readout.get_nuclei_in_plaque() 
+                    for plq_object_readout in plq_object_readouts]))
+                    infected_nuclei_in_plaque_abs.append(np.mean([
+                        plq_object_readout.get_infected_nuclei_in_plaque() 
+                        for plq_object_readout in plq_object_readouts]))
+                    max_intensity_GFP_abs.append(np.mean([plq_object_readout.get_max_intensity_GFP() 
+                    for plq_object_readout in plq_object_readouts]))
+                    total_intensity_GFP_abs.append(np.mean([
+                        plq_object_readout.get_total_intensity_GFP() 
+                        for plq_object_readout in plq_object_readouts]))
+                    mean_intensity_GFP_abs.append(np.mean([
+                        plq_object_readout.get_mean_intensity_GFP() 
+                        for plq_object_readout in plq_object_readouts]))
                 else:
                     area_abs.append(0)
                     centroid_1_abs.append(0)
