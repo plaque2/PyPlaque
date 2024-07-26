@@ -32,7 +32,7 @@ class PlateImage:
                                     corresponding to each well.
 
     use_picks (bool, optional): An indicator for whether to use pick area calculations during 
-                              analysis. Defaults to True.
+                              analysis. Defaults to False.
 
     inverted (bool, optional): A boolean flag indicating whether the plate image is inverted 
                             or not.
@@ -43,7 +43,7 @@ class PlateImage:
                   n_columns,
                   plate_image,
                   plate_mask,
-                  use_picks = True,
+                  use_picks = False,
                   inverted = False):
       #check data types
       if not isinstance(n_rows, int):

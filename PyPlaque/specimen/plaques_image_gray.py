@@ -26,7 +26,7 @@ class PlaquesImageGray(PlaquesMask):
                         fixed thresholding approach. Defaults to 5.
 
     use_picks (bool, optional): Indicates whether to use pick-based area calculation. 
-                              Defaults to True.
+                              Defaults to False.
 
   Raises:
     TypeError: If `name` is not a string, if `image` is not a 2D numpy array, or if `plaques_mask` 
@@ -40,7 +40,7 @@ class PlaquesImageGray(PlaquesMask):
                 plaques_mask = None,
                 threshold = None,
                 sigma = 5,
-                use_picks = True):
+                use_picks = False):
     # check types
     if not isinstance(name, str):
       raise TypeError("Image name atribute must be a str")
