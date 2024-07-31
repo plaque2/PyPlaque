@@ -71,7 +71,7 @@ class ExperimentFluorescencePlaque:
                 'max_cell_area': 90,
                 'illumination_correction_flag': False,
                 'correction_ball_radius': 120,
-                'use_picks': True,
+                'use_picks': False,
                 'image_bits': 16
         },
         'virus':  {'selected_channel': 'w2',
@@ -85,7 +85,7 @@ class ExperimentFluorescencePlaque:
                 'plaque_gaussian_filter_sigma': 100,
                 'peak_region_size': 50,
                 'correction_ball_radius': 120,
-                'use_picks': True,
+                'use_picks': False,
                 'image_bits': 16
         }
       }

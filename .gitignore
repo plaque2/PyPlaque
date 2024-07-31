@@ -6,7 +6,8 @@
 *MANIFEST*
 *__pycache__*
 *__pycache__/*
-*data/*
+data/*
+!data/.gitkeep
 *.DS_Store*
 *ipynb_checkpoints*
 *.pytest_cache*
