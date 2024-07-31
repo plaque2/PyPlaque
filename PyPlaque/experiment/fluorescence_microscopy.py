@@ -26,9 +26,9 @@ if pil_image is not None:
   }
 
 
-class ExperimentFluorescencePlaque:
+class FluorescenceMicroscopy:
   """
-	**ExperimentFluorescencePlaque Class** 
+	**FluorescenceMicroscopy Class** 
   It is aimed to contain metadata of multiple instances of a multititre plate of Fluorescence 
   plaques.
     
@@ -104,7 +104,7 @@ class ExperimentFluorescencePlaque:
   def get_params(self):
     """
     **get_params Method** 
-    Returns the parameters currently saved in the ExperimentFluorescencePlaque class.
+    Returns the parameters currently saved in the FluorescenceMicroscopy class.
     
     Args:
       self (required): The instance of the class containing the data.
@@ -296,7 +296,7 @@ class ExperimentFluorescencePlaque:
     Usage:
 
     ```
-    image = pyplaque.ExperimentFluorescencePlaque.read_from_path(image_path)
+    image = pyplaque.FluorescenceMicroscopy.read_from_path(image_path)
     ```
 
     Args:

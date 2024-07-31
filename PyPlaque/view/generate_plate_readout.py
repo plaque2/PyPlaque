@@ -11,7 +11,7 @@ class PlateReadout:
     of a Fluorescence Plaque.
 
     Attributes:
-        experiment (object, required): ExperimentFluorescencePlaque class object initialized with 
+        experiment (object, required): FluorescenceMicroscopy class object initialized with 
                     parameters and data of well plate of Fluorescence Plaques loaded.
         
         plate_id (int, optional): Identifier for the plate. Default is 0.

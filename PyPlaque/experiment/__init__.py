@@ -1,2 +1,2 @@
-from PyPlaque.experiment.experiment_crystal_violet_plaque import *
-from PyPlaque.experiment.experiment_fluorescence_plaque import *
+from PyPlaque.experiment.crystal_violet import *
+from PyPlaque.experiment.fluorescence_microscopy import *
