@@ -23,9 +23,9 @@ if pil_image is not None:
 	"lanczos": pil_image.LANCZOS,
 	}
 
-class ExperimentCrystalVioletPlaque:
+class CrystalViolet:
   """
-	**Class ExperimentCrystalVioletPlaque** 
+	**Class CrystalViolet** 
   This class is designed to contain metadata of multiple instances of a multititre plate of 
   Crystal Violet plaques.
     
@@ -74,7 +74,7 @@ class ExperimentCrystalVioletPlaque:
   def get_params(self):
     """
     **get_params Method** 
-    Returns the parameters currently saved in the ExperimentCrystalVioletPlaque class.
+    Returns the parameters currently saved in the CrystalViolet class.
     
     Args:
       self (required): The instance of the class containing the data.
@@ -167,7 +167,7 @@ class ExperimentCrystalVioletPlaque:
     Usage:
 
     ```
-    image = pyplaque.ExperimentCrystalVioletPlaque.read_from_path(image_path)
+    image = pyplaque.ExperimentCrystalViolet.read_from_path(image_path)
     ```
 
     Args:
