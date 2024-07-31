@@ -42,13 +42,15 @@ setup(
           'Pillow>=10.3.0',
           'pandas>=1.5.3',
           'scipy>=1.13.1',
-          'scikit-learn>=1.5.0'
-          'seaborn>=0.12.2',
+          'scikit-learn>=1.5.0',
+          'seaborn==0.12.2',
           'tqdm>=4.66.4',
           'tifffile>=2023.2.28'
       ],
-
-   classifiers=[
+  extras_require={
+          'test': ['pytest>=8.1.1']
+      },
+  classifiers=[
      'Development Status :: 3 - Alpha',
      'Intended Audience :: Science/Research',
      'Topic :: Scientific/Engineering :: Bio-Informatics ',
@@ -57,7 +59,7 @@ setup(
      'Programming Language :: Python :: 3.10',
      'Programming Language :: Python :: 3.11',
      'Programming Language :: Python :: 3.12'
-   ],
+      ],
 
   long_description=long_description,
   long_description_content_type='text/markdown'

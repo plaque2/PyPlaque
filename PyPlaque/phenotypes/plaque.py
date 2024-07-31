@@ -24,14 +24,15 @@ class Plaque:
       bounding box surrounding the plaque.
       
       use_picks (bool, optional): A boolean flag indicating whether to use pick measurements or not. 
-      Defaults to True.
+
+      Defaults to False.
   
   Raises:
       TypeError: If the mask is not a 2D numpy array, if centroid is not a tuple of coordinates, 
       or if bbox is not a tuple of limits.
   """
 
-  def __init__(self, mask, centroid = None, bbox = None, use_picks=True):
+  def __init__(self, mask, centroid = None, bbox = None, use_picks=False):
     #check data types
     if (not isinstance(mask, np.ndarray)) or (not mask.ndim == 2):
       raise TypeError("Mask atribute of Plaque must be a 2D numpy array")

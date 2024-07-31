@@ -20,12 +20,12 @@ class PlaquesMask:
                                           plaque objects. 
 
     use_picks (bool, optional): Indicates whether to use pick-based area calculation. 
-                              Defaults to True.
+                              Defaults to False.
 
   Raises:
     TypeError: If `name` is not a string or if `plaques_mask` is not a 2D numpy array.
   """
-  def __init__(self, name, plaques_mask, use_picks=True):
+  def __init__(self, name, plaques_mask, use_picks=False):
     # check types
     if not isinstance(name, str):
       raise TypeError('Image name atribute must be a str')
