@@ -24,7 +24,6 @@ class Plaque:
       bounding box surrounding the plaque.
       
       use_picks (bool, optional): A boolean flag indicating whether to use pick measurements or not. 
-
       Defaults to False.
   
   Raises:
