@@ -78,7 +78,7 @@ ___________
 
 ___________
 
-**PlaquesMask class** designed to hold binary mask of multiple
+**PlaquesMask Class** designed to hold binary mask of multiple
 plaque phenotypes.
 
 _Arguments_:
@@ -88,7 +88,7 @@ name - (str, required) string, image sample name for identification
 plaques_mask - (np.array, required) numpy array containing
 binary mask of all virological plaque objects.
 
-**get_palques method** returns a list of individual plaques
+**get_plaques Method** returns a list of individual plaques
 stored as binary numpy arrays.
 
 _Arguments_:
@@ -98,7 +98,7 @@ in px.
 
 ___________
 
-**PlaqueImageGray class** designed to hold grayscale image data containing
+**PlaqueImageGray Class** designed to hold grayscale image data containing
 multiple plaque phenotypes with a respective binary mask. The class inherits
 from PlaquesMask.
 
@@ -122,7 +122,7 @@ the fixed thresholding approach.
 Either mask or fixed threshold must be provided
 ___________
 
-**PlaquesImageRGB class** designed to hold RGB image data containing
+**PlaquesImageRGB Class** designed to hold RGB image data containing
 multiple plaque phenotypes with a respective binary mask.The class inherits
 from PlaquesMask.
 
@@ -139,7 +139,7 @@ virological plaque objects.
 
 ___________
 
-**Class PlaquesWell** is aimed to contain a full well of a multititre plate.
+**PlaquesWell Class** is aimed to contain a full well of a multititre plate.
 
 _Arguments_:
 
@@ -181,7 +181,7 @@ ___________
 
 ___________
 
-**Plaque** class is designed to hold a single virological plaque
+**Plaque Class** class is designed to hold a single virological plaque
 phenotype as an object.
 
 _Arguments_:
@@ -197,7 +197,7 @@ plaque object
 
 ___________
 
-**FluorescencePlaque** conains plaque obtained from fluorescence image.
+**FluorescencePlaque Class** conains plaque obtained from fluorescence image.
 Class inherits from Plaque class and is also designed to hold a single
 virological plaque phenotype.
 
@@ -208,7 +208,7 @@ virological plaque object.
 
 ___________
 
-**CrystalVioletPlaque** plaque obtained from crystal violet image. Class
+**CrystalVioletPlaque Class** plaque obtained from crystal violet image. Class
 inherits from Plaque class and is also designed to hold a single virological
 plaque phenotype.
 
