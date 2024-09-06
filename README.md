@@ -170,7 +170,7 @@ plaques_count_gt_list = [len(plq_mask.get_plaques()) for plq_mask in tqdm(plaque
 ../../../data_backup/samples_crystal_violet_plaques/plaques_image_png/IMG_6446/IMG_6446.png_6.png  :  1 
 
 #### 6. Generating and displaying generated mask of plaques in case one isn't available<br/>
-(simple set read_mask=False in exp.load_well_images_and_masks_for_plate())
+(simply set read_mask=False in exp.load_well_images_and_masks_for_plate())
 ```
 exp2 = CrystalViolet(base_dir+'plaques_image_png/', base_dir+'plaques_mask_png/',
                                         params = None) # default values in class, option to update
