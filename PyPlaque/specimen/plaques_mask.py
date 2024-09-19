@@ -171,7 +171,8 @@ class PlaquesMask:
 
     # Show the image
     ax.imshow(self.plaques_mask,cmap='gray')
-
+    ax.axis('off')
+    
     max_margin = 0
     radius = 0
     point3 = np.array((self.measure_dict['centroid'][0],

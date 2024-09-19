@@ -218,7 +218,7 @@ class PlateImage:
       >>> instance_of_plate.plot_well_positions(save_path='path/to/save/figure.png')
     """
     _, ax = plt.subplots(figsize=(10, 6))
-    ax.imshow(self.plate_mask)
+    ax.imshow(self.plate_mask, cmap='gray')
 
     well_dict = self.get_well_positions()
 
