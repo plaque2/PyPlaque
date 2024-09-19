@@ -1,6 +1,6 @@
 import pathlib
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 import PyPlaque
 
@@ -13,12 +13,11 @@ cwd = pathlib.Path(__file__).parent.resolve()
 # Get the long description from the README file
 long_description = (cwd / 'README.md').read_text(encoding='utf-8')
 
-version = 'v0.2.0'
+version = 'v0.2.1'
 
 setup(
   name = 'PyPlaque',
-  #packages = ['PyPlaque','PyPlaque.experiment','PyPlaque.phenotypes','PyPlaque.specimen','PyPlaque.utils'],
-  packages = ['PyPlaque'],
+  packages=find_packages(include=['PyPlaque', 'PyPlaque.*']),
   version = version,
   license='GPLv3',
   description = 'Python package for virus plaque analysis based on Plaque2.0',
@@ -28,6 +27,7 @@ setup(
   download_url = 'https://github.com/plaque2/PyPlaque/archive/{}.tar.gz' \
             .format(version),
   keywords = ['Virus', 'Plaque', 'Virology', 'Microscopy', 'Computer vision'],
+  python_requires=">=3.9, <=3.12",
   install_requires=[
           'scikit-image>=0.24.0',
           'numpy>=2.0.0',
