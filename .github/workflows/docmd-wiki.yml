@@ -8,8 +8,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout this repo (optional)
+      - name: Checkout wiki repo
         uses: actions/checkout@v4
+        with:
+            repository: ${{ github.repository }}.wiki
+            path: wiki
 
       - name: Install Python and docmd
         uses: actions/setup-python@v5
@@ -31,21 +34,11 @@ jobs:
           docmd PyPlaque.view --out docs
           cd docs
 
-      - name: Clone PyPlaque.wiki repository
-        run: |
-          git clone https://github.com/plaque2/PyPlaque.wiki.git wiki
-
       - name: Copy generated docs to wiki
         run: |
           cp -v *.md wiki/
 
       - name: Commit and push to Wiki
         run: |
-          cd wiki
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add .
-          git commit -m "Update docs from PyPlaque using docmd" || echo "No changes to commit"
-          git push
           cd ../../
           rm -rf docs
