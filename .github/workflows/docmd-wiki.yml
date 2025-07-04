@@ -45,7 +45,7 @@ jobs:
           cp -v docs/*.md ../wiki/
           rm -rf docs
 
-- name: Run script to update wiki
+      - name: Run script to update wiki
         run: |
           cd ../wiki
           git add .
