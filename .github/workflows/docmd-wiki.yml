@@ -42,7 +42,9 @@ jobs:
 
       - name: Copy generated docs to wiki
         run: |
-          cp -v docs/*.md ../wiki/
+          cd docs
+          cp -v *.md ../../wiki/
+          cd ../
           rm -rf docs
 
       - name: Run script to update wiki
