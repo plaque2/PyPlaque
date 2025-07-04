@@ -1,10 +1,23 @@
 import numpy as np
 from scipy import ndimage as ndi
 
-STREL_4 = np.array([[0, 1, 0],
+def get_strel(neighbourhood):
+    """
+    **Get structural elements Function**
+        This function returns structural elements of the defined neighbourhood.
+        
+    Args:
+        neighbourhood (int, required): Neighbourhood value of 4 or 8.
+        
+    Returns:
+        np.uint8 array of the structural element.
+    """
+    if neighbourhood == 4:
+        return np.array([[0, 1, 0],
                     [1, 1, 1],
                     [0, 1, 0]], dtype=np.uint8)
-STREL_8 = np.ones((3, 3), dtype=np.uint8)
+    elif neighbourhood == 8:
+        return np.ones((3, 3), dtype=np.uint8)
 
 def picks_area(image, neighbourhood=4):
     """
@@ -31,10 +44,7 @@ def picks_area(image, neighbourhood=4):
         TypeError: If `image` is not a 2D numpy array or `neighbourhood` is not an integer.
         ValueError: If `neighbourhood` is not either 4 or 8.
     """
-    if neighbourhood == 4:
-        strel = STREL_4
-    elif neighbourhood == 8:
-        strel = STREL_8
+    strel = get_strel(neighbourhood)
     image = image.astype(np.uint8)
     eroded_image = ndi.binary_erosion(image, strel, border_value=0)
     border_image = image - eroded_image
@@ -86,10 +96,7 @@ def picks_perimeter(image, neighbourhood=4):
         TypeError: If `image` is not a 2D numpy array or `neighbourhood` is not an integer.
         ValueError: If `neighbourhood` is not either 4 or 8.
     """
-    if neighbourhood == 4:
-        strel = STREL_4
-    else:
-        strel = STREL_8
+    strel = get_strel(neighbourhood)
     image = image.astype(np.uint8)
 
     (w, h) = image.shape
