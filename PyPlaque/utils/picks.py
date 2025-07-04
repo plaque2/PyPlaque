@@ -3,7 +3,7 @@ from scipy import ndimage as ndi
 
 def get_strel(neighbourhood):
     """
-    **Get structural elements Function**
+    **get_strel Function**
         This function returns structural elements of the defined neighbourhood.
         
     Args:
