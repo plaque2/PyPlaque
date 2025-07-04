@@ -21,7 +21,7 @@ jobs:
 
       - name: Clone PyPlaque repository
         run: |
-          cd PyPlaque
+          ls
           pip install -e .
           mkdir -p docs
           docmd PyPlaque.experiment -out docs
