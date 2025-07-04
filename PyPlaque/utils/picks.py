@@ -2,14 +2,16 @@ import numpy as np
 from scipy import ndimage as ndi
 
 def get_strel(neighbourhood):
-"""
-**Get structural elements Function**
-    This function returns structural elements of the defined neighbourhood.
-Args:
-    neighbourhood (int, required): Neighbourhood value of 4 or 8.
-Returns:
-    np.uint8 array of the structural element.
-"""
+    """
+    **Get structural elements Function**
+        This function returns structural elements of the defined neighbourhood.
+        
+    Args:
+        neighbourhood (int, required): Neighbourhood value of 4 or 8.
+        
+    Returns:
+        np.uint8 array of the structural element.
+    """
     if neighbourhood == 4:
         return np.array([[0, 1, 0],
                     [1, 1, 1],
