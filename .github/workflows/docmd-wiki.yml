@@ -37,11 +37,11 @@ jobs:
 
       - name: Copy generated docs to wiki
         run: |
-          cp -v *.md PyPlaque.wiki/
+          cp -v *.md wiki/
 
       - name: Commit and push to Wiki
         run: |
-          cd PyPlaque.wiki
+          cd wiki
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add .
