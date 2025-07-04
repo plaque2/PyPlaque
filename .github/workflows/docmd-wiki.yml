@@ -14,12 +14,12 @@ jobs:
       - name: Install Python and docmd
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.11'
 
       - name: Install docmd
         run: pip install docmd
 
-      - name: Clone PyPlaque repository
+      - name: Create MD files from PyPlaque docstrings
         run: |
           ls
           pip install -e .
