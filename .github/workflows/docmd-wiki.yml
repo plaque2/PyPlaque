@@ -13,8 +13,14 @@ jobs:
         with:
             repository: ${{ github.repository }}.wiki
             path: wiki
+      
+      - name: Checkout PyPlaque repo
+        uses: actions/checkout@v4
+        with:
+            repository: ${{ github.repository }}
+            path: PyPlaque
 
-      - name: Install Python and docmd
+      - name: Install Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -25,6 +31,7 @@ jobs:
       - name: Create MD files from PyPlaque docstrings
         run: |
           ls
+          cd PyPlaque
           pip install -e .
           mkdir -p docs
           docmd PyPlaque.experiment --out docs
@@ -32,13 +39,15 @@ jobs:
           docmd PyPlaque.specimen --out docs
           docmd PyPlaque.utils --out docs
           docmd PyPlaque.view --out docs
-          cd docs
 
       - name: Copy generated docs to wiki
         run: |
-          cp -v *.md wiki/
-
-      - name: Commit and push to Wiki
-        run: |
-          cd ../../
+          cp -v docs/*.md ../wiki/
           rm -rf docs
+
+- name: Run script to update wiki
+        run: |
+          cd ../wiki
+          git add .
+          git commit -m "Updated wiki with a new page"
+          git push
