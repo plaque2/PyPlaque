@@ -1,0 +1,50 @@
+name: Generate and Push Docs to Wiki
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout this repo (optional)
+        uses: actions/checkout@v4
+
+      - name: Install Python and docmd
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install docmd
+        run: pip install docmd
+
+      - name: Clone PyPlaque repository
+        run: |
+          git clone https://github.com/plaque2/PyPlaque.git
+          cd PyPlaque
+          pip install -e .
+          mkdir -p docs
+          docmd PyPlaque.experiment -out docs
+          docmd PyPlaque.phenotypes -out docs
+          docmd PyPlaque.specimen -out docs
+          docmd PyPlaque.utils -out docs
+          docmd PyPlaque.view -out docs
+          cd ../
+
+      - name: Clone PyPlaque.wiki repository
+        run: |
+          git clone https://github.com/plaque2/PyPlaque.wiki.git wiki
+
+      - name: Copy generated docs to wiki
+        run: |
+          cp -v PyPlaque/docs/*.md PyPlaque.wiki/
+
+      - name: Commit and push to Wiki
+        run: |
+          cd PyPlaque.wiki
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Update docs from PyPlaque using docmd" || echo "No changes to commit"
+          git push
