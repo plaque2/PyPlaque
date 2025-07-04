@@ -24,12 +24,12 @@ jobs:
           ls
           pip install -e .
           mkdir -p docs
-          docmd PyPlaque.experiment -out docs
-          docmd PyPlaque.phenotypes -out docs
-          docmd PyPlaque.specimen -out docs
-          docmd PyPlaque.utils -out docs
-          docmd PyPlaque.view -out docs
-          cd ../
+          docmd PyPlaque.experiment --out docs
+          docmd PyPlaque.phenotypes --out docs
+          docmd PyPlaque.specimen --out docs
+          docmd PyPlaque.utils --out docs
+          docmd PyPlaque.view --out docs
+          cd docs
 
       - name: Clone PyPlaque.wiki repository
         run: |
@@ -37,7 +37,7 @@ jobs:
 
       - name: Copy generated docs to wiki
         run: |
-          cp -v PyPlaque/docs/*.md PyPlaque.wiki/
+          cp -v *.md PyPlaque.wiki/
 
       - name: Commit and push to Wiki
         run: |
