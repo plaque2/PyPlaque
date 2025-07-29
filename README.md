@@ -22,7 +22,7 @@ ___________
 
 ___________
 ## Documentation
-To be added in a separate webpage. Please refer to scripts in the repository now.
+The documentation has been added in our GitHub Wiki page [https://github.com/plaque2/PyPlaque/wiki](https://github.com/plaque2/PyPlaque/wiki). Please refer to it for links to our modules and subsequent links to classes and methods/functions for their descriptions.
 
 ___________
 ## Usage
