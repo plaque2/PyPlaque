@@ -3,8 +3,8 @@ We introduce PyPlaque, an open-source Python package focusing on flexibility and
 
 For further details please look at our paper: [https://www.biorxiv.org/content/10.1101/2024.08.07.603274v1]
 ___________
-## Version
-New release v0.2.0
+## Documentation
+The documentation has been added in our GitHub Wiki page [https://github.com/plaque2/PyPlaque/wiki](https://github.com/plaque2/PyPlaque/wiki). Please refer to it for links to our modules and subsequent links to classes and methods/functions for their descriptions.
 
 ___________
 ## Installation
@@ -19,10 +19,6 @@ ___________
 
 - Clone repo
 - run `pip install -e .`
-
-___________
-## Documentation
-The documentation has been added in our GitHub Wiki page [https://github.com/plaque2/PyPlaque/wiki](https://github.com/plaque2/PyPlaque/wiki). Please refer to it for links to our modules and subsequent links to classes and methods/functions for their descriptions.
 
 ___________
 ## Usage
