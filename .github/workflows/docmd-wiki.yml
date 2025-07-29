@@ -1,0 +1,60 @@
+name: Generate and Push Docs to Wiki
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout wiki repo
+        uses: actions/checkout@v4
+        with:
+            repository: ${{ github.repository }}.wiki
+            path: wiki
+      
+      - name: Checkout PyPlaque repo
+        uses: actions/checkout@v4
+        with:
+            repository: ${{ github.repository }}
+            path: PyPlaque
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install docmd
+        run: pip install docmd
+        
+      - name: Check existing paths
+        run: |
+          pwd
+          ls
+          
+      - name: Create MD files from PyPlaque docstrings
+        run: |
+          cd PyPlaque
+          pwd
+          pip install -e .
+          docmd PyPlaque.experiment --out ../wiki
+          docmd PyPlaque.phenotypes --out ../wiki
+          docmd PyPlaque.specimen --out ../wiki
+          docmd PyPlaque.utils --out ../wiki
+          docmd PyPlaque.view --out ../wiki
+
+      - name: Check existing paths
+        run: |
+          pwd
+          ls
+
+      - name: Run script to update wiki
+        run: |
+          cd wiki
+          git config --global user.email "noreply@github.com"
+          git config --global user.name "gh_actions_runner"
+          git add .
+          git commit -m "Updated wiki with a new page"
+          git push
