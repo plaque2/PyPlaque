@@ -45,6 +45,12 @@ jobs:
           docmd PyPlaque.utils --out ../wiki
           docmd PyPlaque.view --out ../wiki
 
+      - name: Fix markdown links to remove .md extension
+        run: |
+          cd wiki
+          # Use sed to replace .md) with ) in all markdown files
+          find . -name "*.md" -type f -exec sed -i 's/\.md)/)/g' {} +
+          
       - name: Check existing paths
         run: |
           pwd
