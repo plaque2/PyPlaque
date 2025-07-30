@@ -21,6 +21,17 @@ ___________
 - run `pip install -e .`
 
 ___________
+## Running notebooks from the repository in Google Colab
+
+- Open Google Chrome browser
+- Go to the Chrome store for Google Colab extension using the link https://chromewebstore.google.com/detail/open-in-colab/iogfkhleblhcpcekbiedikdehleodpjo?hl=en-GB&utm_source=ext_sidebar
+- Click 'Add to Chrome'
+- Navigate then to this repository on Google Chrome
+- Click on one of the notebooks
+- From the extensions at the top right bar of the browser click 'Open with Colab'
+  
+Note : Some notebooks may not fully run since additional data is required. Load your own data into the Colab environment via Google Drive or direct upload or via download links and then run the notebook.
+  
 ## Usage
 ### Fluorescence Plaques
 
