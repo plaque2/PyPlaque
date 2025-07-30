@@ -8,8 +8,9 @@ The documentation has been added in our GitHub Wiki page [https://github.com/pla
 
 ___________
 ## Installation
+The instructions apply for MacOS, Linux and Windows
 
-See project's PyPi page [https://pypi.org/project/PyPlaque/](https://pypi.org/project/PyPlaque/)
+You can also look at the project's PyPi page [https://pypi.org/project/PyPlaque/](https://pypi.org/project/PyPlaque/)
 
 ```
 pip install PyPlaque
