@@ -4,7 +4,7 @@ We introduce PyPlaque, an open-source Python package focusing on flexibility and
 For further details please look at our paper: [https://www.biorxiv.org/content/10.1101/2024.08.07.603274v1]
 ___________
 ## Documentation
-The documentation has been added in our GitHub Wiki page [https://github.com/plaque2/PyPlaque/wiki](https://github.com/plaque2/PyPlaque/wiki). Please refer to it for links to our modules and subsequent links to classes and methods/functions for their descriptions. For the links under each module in the main Wiki page, please use the corresponding links from the sidebar instead of the direct links shown. This results in a webpage that is easier to read.
+The documentation has been added in our GitHub Wiki page [https://github.com/plaque2/PyPlaque/wiki](https://github.com/plaque2/PyPlaque/wiki). Please refer to it for links to our modules and subsequent links to classes and methods/functions for their descriptions.
 
 ___________
 ## Installation
@@ -22,16 +22,20 @@ ___________
 - run `pip install -e .`
 
 ___________
-## Running notebooks from the repository in Google Colab
+## Links to Google Colab notebooks for important workflows using the software
 
-- Open Google Chrome browser
-- Go to the Chrome store for Google Colab extension using the link https://chromewebstore.google.com/detail/open-in-colab/iogfkhleblhcpcekbiedikdehleodpjo?hl=en-GB&utm_source=ext_sidebar
-- Click 'Add to Chrome'
-- Navigate then to this repository on Google Chrome
-- Click on one of the notebooks
-- From the extensions at the top right bar of the browser click 'Open with Colab'
+- The ```load_data.ipynb``` notebook shows briefly steps to download programmatically the sample data used for analysis in the following notebooks. It specifically used ```curl``` to download the data from publicly published website links. This notebook can be opened in Colab here. <a href="https://colab.research.google.com/github/plaque2/PyPlaque/blob/master/notebooks/load_data.ipynb)" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+
+- The ```synth.ipynb``` notebook in PyPlaque generates synthetic shapes at random locations (that are seeded for reproducibility) to emulate segmentation masks. These simulated images are wrapped in standard PyPlaque classes like ```FluorescenceMicroscopy``` that treats each image of consisting of synthetic shapes as a fluorescence plate well, enabling seamless integration with the package's analysis and visualization pipelines. This allows us to compare image analysis algorithms' area and perimeter calculations on standard known shapes without relying on real irregular shapes where the true measurements could be ambiguous. This notebook can be tried in Colab here. <a href="https://colab.research.google.com/github/plaque2/PyPlaque/blob/master/notebooks/synthetic_data/synth.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+
+- The ```example_analysis.ipynb``` notebook demonstrates a systematic and comprehensive analysis workflow using real plaque assay data. It illustrates how to load fluorescence microscopy images of viral plaques using the ```FluorescenceMicroscopy``` class, generate plate level readouts (readouts for all wells of a plate) and filter them into viral and control groups based on well identifier metadata additionally stored in the class. We then use internal visualisation tools to validate our analysis by showcasing comparison barplots for readouts that indicate infectivity that should be different between viral and control wells. This notebook can be tried in Colab here. <a href="https://colab.research.google.com/github/plaque2/PyPlaque/blob/master/notebooks/visualization/example_analysis.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+
+- The ```cvp_detailed.ipynb``` notebook demonstrates functionality provided by PyPlaque for the analysis of the crystal violet stained plaques using the ```CrystalViolet``` class to load and store crystal violet stained, mobile photography images of viral plaques in 6-well plates available as individual wells. Using inbuilt classes and functions, steps are demonstrated to generate rudimentary binary detection masks for plaques if they are unavailable, stitching individual wells to create partial composite overviews of the plate, detection of plaques based on size criteria from available or generated detection masks, getting measures that describe the shape characteristics and spread of plaques in a well, visualise the spread of plaque measures in a well and finally generate individual well images and well and plaque detection masks from full plate images and full plate well and plaque detection masks in case they are unavailable. This notebook can be tried in Colab here. <a href="https://colab.research.google.com/https://github.com/plaque2/PyPlaque/blob/master/notebooks/cvp_detailed.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+
+- The ```fp_detailed.ipynb``` notebook demonstrates functionality provided by PyPlaque for the analysis of the fluorescence microscopy plaques using the ```FluorescenceMicroscopy``` class to load and store fluorescence microscopy images of viral plaques in 384-well plates available as individual wells. Using inbuilt classes and functions, steps are demonstrated to load virus and nuclei channel images for the wells, generate binary detection masks for both channels if unavailable, stitching individual wells to create partial composite overviews of the plate, and generation of plate level, well level and plaque level readouts at these 3 granularity levels. This notebook can be tried in Colab here. <a href="https://colab.research.google.com/https://github.com/plaque2/PyPlaque/blob/master/notebooks/fp_detailed.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+
   
-Note : Some notebooks may not fully run since additional data is required. Load your own data into the Colab environment via Google Drive or direct upload or via download links and then run the notebook.
+Note : In notebooks, custom packages and additional data need to be loaded. Load your own data into the Colab environment by connecting via Google Drive or direct upload or using our sample analysis data using the code in the `load_data.ipynb` notebook above and then run the analysis.
   
 ## Usage
 ### Fluorescence Plaques
@@ -196,47 +200,8 @@ ___________
 ## Hierarchical Class Structure
 
 ![fig1](https://github.com/user-attachments/assets/65f4d2c5-2be0-44fd-8fdb-09a0507f16ea)
+![fig2](https://github.com/user-attachments/assets/da0dda26-d7fb-4bed-85a6-1e4d0a4f5dac)
 
-___________
-## Class Types
-
-### Experiment
-1. CrystalViolet - This class is designed to contain metadata of multiple instances of a multititre plate of 
-  Crystal Violet plaques.
-2. FluorescenceMicroscopy -  This class is designed to contain metadata of multiple instances of a multititre plate of Fluorescence 
-  plaques.
-
-### Specimen
-1. PlaquesImageGray - This class is designed to hold grayscale image data containing multiple plaque phenotypes with a 
-  respective binary mask. The class inherits from PlaquesMask.
-2. PlaquesImageRGB - The class is designed to hold RGB image data containing multiple plaque phenotypes with a 
-  respective binary mask. The class inherits from PlaquesMask.
-3. PlaquesMask - This class is designed to hold a binary mask of multiple plaque instances in a well.
-4. PlaquesWell - This class is designed to contain a full well of a multititre plate
-   
-### Phenotypes
-1. CrystalVioletPlaque - This class contains a plaque obtained from crystal violet image. Class inherits from Plaque class 
-  and is also designed to hold a single virological plaque phenotype.
-2. FluorescencePlaque - This class contains a plaque obtained from fluorescence image. Class inherits from Plaque class 
-  and is also designed to hold a single virological plaque phenotype.
-3. Plaque - This class is designed to hold a single virological plaque phenotype as an object. It 
-  encapsulates the properties and behaviors related to a specific plaque, including its mask, 
-  centroid coordinates, bounding box, and usage preference for pick measurements.
-
-### View
-1. WellImageReadout - This class encapsulates metadata related to multiple instances of plaques 
-    within a single well of a fluorescence plate.
-2. PlaqueObjectReadout - This class encapsulate data related to a single instance of a 
-    plaque from a fluorescence plaque well.
-3. PlateReadout -  This class contains readouts of multiple wells of a single plate 
-    of a Fluorescence Plaque.
-4. PlateImage - This class encapsulates a full multi-title plate image and 
-  its corresponding binary mask. It provides methods to extract individual well images 
-  from the plate based on specified criteria, visualize these wells annotated with their positions, 
-  and more.
-
-For more information about class attributes and functions please refer to scripts in the repository.
-___________
 
 ## For further clarifications or queries, please contact:
 1. Trina De (https://orcid.org/0000-0003-1111-9851)
