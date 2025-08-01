@@ -35,8 +35,9 @@ class FluorescenceMicroscopy:
   Attributes:
     plate_folder (str, required): The main directory containing subdirectories of the plates.
     
-    plate_mask_folder (str, required): The main directory containing subdirectories of the 
-                                    plate masks.
+    plate_mask_folder (str, optional): The main directory containing subdirectories of the 
+                                    plate masks. Gets created automatically in the same structure
+                                      as plate_folder if not given.
     
     params (dict, optional): A dictionary of parameters for nuclei and virus channels to be used 
                             for generating masks and readouts. Default is an empty dictionary.
@@ -44,12 +45,13 @@ class FluorescenceMicroscopy:
   Raises:
     TypeError: If the provided arguments are not of the expected type.
   """
-  def __init__(self, plate_folder, plate_mask_folder, params=None):
+  def __init__(self, plate_folder, plate_mask_folder=None, params=None):
 		#check data types
     if not isinstance(plate_folder, str):
       raise TypeError("Expected plate_folder argument to be str")
-    if not isinstance(plate_mask_folder, str):
-      raise TypeError("Expected plate_mask_folder argument to be str")
+    if plate_mask_folder:
+      if not isinstance(plate_mask_folder, str):
+        raise TypeError("Expected plate_folder argument to be str")
     if params:
       if not isinstance(params, dict):
         raise TypeError("Expected params argument to be dict")
@@ -59,7 +61,15 @@ class FluorescenceMicroscopy:
         raise TypeError("Expected second nested object of params argument to be dict")
 
     self.plate_folder = plate_folder
-    self.plate_mask_folder = plate_mask_folder
+    if plate_mask_folder:
+      self.plate_mask_folder = plate_mask_folder
+      self.plate_mask_folder_original = plate_mask_folder
+    else:
+      self.plate_mask_folder_original = None
+      plate_mask_folder_path = Path(plate_folder).parents[0] / 'masks'
+      plate_mask_folder_path.mkdir(parents=True, exist_ok=True)
+      self.plate_mask_folder = str(plate_mask_folder_path)
+
     if not params:
       params = {
         'nuclei': {
@@ -147,6 +157,11 @@ class FluorescenceMicroscopy:
     else:
       self.plate_indiv_dir = [file for file in os.listdir(self.plate_folder)
       if os.path.isdir(os.path.join(self.plate_folder, file))]
+      self.plate_mask_indiv_dir = [file for file in os.listdir(self.plate_mask_folder)
+      if os.path.isdir(os.path.join(self.plate_mask_folder, file))]
+
+    if self.plate_mask_folder_original == None:
+      _ = [os.mkdir(os.path.join(self.plate_mask_folder, file)) for file in self.plate_indiv_dir]
       self.plate_mask_indiv_dir = [file for file in os.listdir(self.plate_mask_folder)
       if os.path.isdir(os.path.join(self.plate_mask_folder, file))]
 
