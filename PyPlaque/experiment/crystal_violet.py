@@ -32,24 +32,34 @@ class CrystalViolet:
   Attributes:
     plate_folder (str, required): The main directory containing subdirectories of the plates.
 
-    plate_mask_folder (str, required): The main directory containing subdirectories of the 
-                                      plate masks.
+    plate_mask_folder (str, optional): The main directory containing subdirectories of the 
+                                      plate masks. Gets created automatically in the same structure
+                                      as plate_folder if not given.
 
     params (dict, optional): A dictionary of parameters for crystal violet plaques, thresholding, 
                             etc. Default is an empty dictionary with default values set.
   """
-  def __init__(self, plate_folder, plate_mask_folder, params=None):
+  def __init__(self, plate_folder, plate_mask_folder=None, params=None):
     #check data types
     if not isinstance(plate_folder, str):
       raise TypeError("Expected plate_folder argument to be str")
-    if not isinstance(plate_mask_folder, str):
-      raise TypeError("Expected plate_mask_folder argument to be str")
+    if plate_mask_folder:
+      if not isinstance(plate_mask_folder, str):
+        raise TypeError("Expected plate_folder argument to be str")
     if params:
       if not isinstance(params, dict):
         raise TypeError("Expected params argument to be dict")
 
     self.plate_folder = plate_folder
-    self.plate_mask_folder = plate_mask_folder
+    if plate_mask_folder:
+      self.plate_mask_folder = plate_mask_folder
+      self.plate_mask_folder_original = plate_mask_folder
+    else:
+      self.plate_mask_folder_original = None
+      plate_mask_folder_path = Path(plate_folder).parents[0] / 'masks'
+      plate_mask_folder_path.mkdir(parents=True, exist_ok=True)
+      self.plate_mask_folder = str(plate_mask_folder_path)
+     
 
     if not params:
       params = {
@@ -93,7 +103,7 @@ class CrystalViolet:
     
     Args:
       whole_plate (bool, optional): A flag to determine whether to consider that folders 
-                                    have whole plate images or not (wells images of a plate 
+                                    have whole plate images or not (well images of a plate 
                                     instead). Default is False.
       folder_pattern (str, optional): A regular expression pattern used to filter directory names.
     
@@ -124,6 +134,11 @@ class CrystalViolet:
             if os.path.isdir(os.path.join(self.plate_folder, file))]
         self.plate_mask_indiv_dir = [file for file in os.listdir(self.plate_mask_folder)
             if os.path.isdir(os.path.join(self.plate_mask_folder, file))]
+        
+    if self.plate_mask_folder_original == None:
+      _ = [os.mkdir(os.path.join(self.plate_mask_folder, file)) for file in self.plate_indiv_dir]
+      self.plate_mask_indiv_dir = [file for file in os.listdir(self.plate_mask_folder)
+      if os.path.isdir(os.path.join(self.plate_mask_folder, file))]
       
     return self.plate_indiv_dir, self.plate_mask_indiv_dir
   
