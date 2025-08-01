@@ -22,7 +22,7 @@ setup(
   license='GPLv3',
   description = 'Python package for virus plaque analysis based on Plaque2.0',
   author = 'Plaque2.0 Team, AILS Institute, CASUS HZDR',
-  author_email = 'ayakimovich@ails.institute',
+  author_email = 'ayakimovich@ails.institute, trinade96@gmail.com',
   url = 'https://github.com/plaque2/PyPlaque',
   download_url = 'https://github.com/plaque2/PyPlaque/archive/{}.tar.gz' \
             .format(version),
