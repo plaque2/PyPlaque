@@ -13,7 +13,7 @@ cwd = pathlib.Path(__file__).parent.resolve()
 # Get the long description from the README file
 long_description = (cwd / 'README.md').read_text(encoding='utf-8')
 
-version = 'v0.2.3'
+version = 'v0.2.4'
 
 setup(
   name = 'PyPlaque',
